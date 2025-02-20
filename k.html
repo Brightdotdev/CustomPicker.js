@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Color Picker</title>
+    <style>
+        #colorPicker, #huePicker {
+            border: 1px solid #000;
+            cursor: crosshair;
+        }
+        #selectedColor {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            border: 1px solid #000;
+        }
+        .selector {
+            width: 10px;
+            height: 10px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Step 1: Create canvas elements and a new div element -->
+    <canvas id="huePicker" width="30" height="300"></canvas>
+    <canvas id="colorPicker" width="300" height="300"></canvas>
+    <div id="selectedColor"></div>
+    <!-- Create draggable selector elements -->
+    <div id="hueSelector" class="selector"></div>
+    <div id="colorSelector" class="selector"></div>
+    
+    <script>
+        // Step 2: Initialize canvas contexts
+        const hueCanvas = document.getElementById('huePicker');
+        const colorCanvas = document.getElementById('colorPicker');
+        const hueCtx = hueCanvas.getContext('2d', { willReadFrequently: true });
+        const colorCtx = colorCanvas.getContext('2d', { willReadFrequently: true });
+        const hueSelector = document.getElementById('hueSelector');
+        const colorSelector = document.getElementById('colorSelector');
+        const selectedColorDiv = document.getElementById('selectedColor');
+
+        let hue = 0; // Initialize hue value
+        let isHueDragging = false;
+        let isColorDragging = false;
+
+        // Position the selectors within the canvas bounds
+        function positionSelector(selector, x, y, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            selector.style.left = `${rect.left + x - selector.offsetWidth / 2}px`;
+            selector.style.top = `${rect.top + y - selector.offsetHeight / 2}px`;
+        }
+
+        // Step 3: Draw the hue picker
+        function drawHuePicker() {
+            const width = hueCanvas.width;
+            const height = hueCanvas.height;
+            const imageData = hueCtx.createImageData(width, height);
+
+            for (let y = 0; y < height; y++) {
+                const hueValue = y / height;
+                const color = hsvToRgb(hueValue, 1, 1);
+                for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    imageData.data[index] = color.r;
+                    imageData.data[index + 1] = color.g;
+                    imageData.data[index + 2] = color.b;
+                    imageData.data[index + 3] = 255; // Alpha channel
+                }
+            }
+
+            hueCtx.putImageData(imageData, 0, 0);
+        }
+
+        // Step 4: Draw the saturation-brightness picker
+        function drawSaturationBrightnessPicker() {
+            const width = colorCanvas.width;
+            const height = colorCanvas.height;
+            const imageData = colorCtx.createImageData(width, height);
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const index = (y * width + x) * 4;
+                    const saturation = x / width;
+                    const brightness = 1 - y / height;
+                    const color = hsvToRgb(hue, saturation, brightness);
+                    imageData.data[index] = color.r;
+                    imageData.data[index + 1] = color.g;
+                    imageData.data[index + 2] = color.b;
+                    imageData.data[index + 3] = 255; // Alpha channel
+                }
+            }
+
+            colorCtx.putImageData(imageData, 0, 0);
+        }
+
+        // Utility function to convert HSV to RGB
+        function hsvToRgb(h, s, v) {
+            let r, g, b;
+            const i = Math.floor(h * 6);
+            const f = h * 6 - i;
+            const p = v * (1 - s);
+            const q = v * (1 - f * s);
+            const t = v * (1 - (1 - f) * s);
+
+            switch (i % 6) {
+                case 0: r = v; g = t; b = p; break;
+                case 1: r = q; g = v; b = p; break;
+                case 2: r = p; g = v; b = t; break;
+                case 3: r = p; g = q; b = v; break;
+                case 4: r = t; g = p; b = v; break;
+                case 5: r = v; g = p; b = q; break;
+            }
+
+            return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+        }
+
+        // Step 5: Handle user interactions
+        function updateHue(y) {
+            hue = y / hueCanvas.height;
+            drawSaturationBrightnessPicker();
+            positionSelector(hueSelector, 15, y, hueCanvas); // Adjust x coordinate as needed
+        }
+
+        function updateColor(x, y) {
+            const saturation = x / colorCanvas.width;
+            const brightness = 1 - y / colorCanvas.height;
+            const color = hsvToRgb(hue, saturation, brightness);
+            const selectedColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+
+            positionSelector(colorSelector, x, y, colorCanvas);
+            selectedColorDiv.style.backgroundColor = selectedColor;
+
+            console.log('Selected color:', selectedColor);
+        }
+
+        // Add event listeners for hue picker
+        hueCanvas.addEventListener('mousedown', (event) => {
+            isHueDragging = true;
+            updateHue(event.offsetY);
+        });
+
+        hueCanvas.addEventListener('mousemove', (event) => {
+            if (isHueDragging) {
+                updateHue(event.offsetY);
+            }
+        });
+
+        hueCanvas.addEventListener('mouseup', () => {
+            isHueDragging = false;
+        });
+
+        hueCanvas.addEventListener('mouseleave', () => {
+            isHueDragging = false;
+        });
+
+        // Add event listeners for color picker
+        colorCanvas.addEventListener('mousedown', (event) => {
+            isColorDragging = true;
+            updateColor(event.offsetX, event.offsetY);
+        });
+
+        colorCanvas.addEventListener('mousemove', (event) => {
+            if (isColorDragging) {
+                updateColor(event.offsetX, event.offsetY);
+            }
+        });
+
+        colorCanvas.addEventListener('mouseup', () => {
+            isColorDragging = false;
+        });
+
+        colorCanvas.addEventListener('mouseleave', () => {
+            isColorDragging = false;
+        });
+
+        // Initialization
+        drawHuePicker();
+        drawSaturationBrightnessPicker();
+    </script>
+</body>
+</html>

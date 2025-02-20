@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .color-display {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+    .scheme-color {
+      width: 50px;
+      height: 50px;
+      display: inline-block;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+    }
+    .controls div {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Color Picker Tool</h1>
+  <div class="controls">
+    <div>
+      <label for="colorInput">Select Color:</label>
+      <input type="color" id="colorInput">
+    </div>
+    <div>
+      <label for="hexInput">HEX Value:</label>
+      <input type="text" id="hexInput">
+    </div>
+    <div>
+      <label for="rSlider">Red:</label>
+      <input type="range" id="rSlider" min="0" max="255" value="0">
+      <span id="rValue">0</span>
+    </div>
+    <div>
+      <label for="gSlider">Green:</label>
+      <input type="range" id="gSlider" min="0" max="255" value="0">
+      <span id="gValue">0</span>
+    </div>
+    <div>
+      <label for="bSlider">Blue:</label>
+      <input type="range" id="bSlider" min="0" max="255" value="0">
+      <span id="bValue">0</span>
+    </div>
+    <div>
+      <label for="brightnessSlider">Brightness:</label>
+      <input type="range" id="brightnessSlider" min="0" max="200" value="100">
+      <span id="brightnessValue">100</span>
+    </div>
+    <div>
+      <label for="contrastSlider">Contrast:</label>
+      <input type="range" id="contrastSlider" min="0" max="200" value="100">
+      <span id="contrastValue">100</span>
+    </div>
+  </div>
+  <div class="color-display" id="selectedColor"></div>
+  <div>
+    <p>HEX: <span id="hexValue"></span></p>
+    <p>RGB: <span id="rgbValue"></span></p>
+    <p>HSL: <span id="hslValue"></span></p>
+  </div>
+  <div>
+    <label for="colorScheme">Color Scheme:</label>
+    <select id="colorScheme">
+      <option value="complementary">Complementary</option>
+      <option value="analogous">Analogous</option>
+      <option value="triadic">Triadic</option>
+    </select>
+  </div>
+  <div id="schemeDisplay"></div>
+  <div>
+    <h2>Contrast Checker</h2>
+    <label for="bgColor">Background Color:</label>
+    <input type="color" id="bgColor">
+    <label for="fgColor">Foreground Color:</label>
+    <input type="color" id="fgColor">
+    <p>Contrast Ratio: <span id="contrastRatio"></span></p>
+    <p id="contrastMessage"></span></p>
+  </div>
+  <div>
+    <button id="saveBtn">Save</button>
+    <button id="exportBtn">Export</button>
+  </div>
+  <div>
+    <h2>Color Blindness Simulation</h2>
+    <div>
+      <div>
+        <p>Protanopia (red deficiency):</p>
+        <div class="color-display" id="protanopia"></div>
+      </div>
+      <div>
+        <p>Deuteranopia (green deficiency):</p>
+        <div class="color-display" id="deuteranopia"></div>
+      </div>
+      <div>
+        <p>Tritanopia (blue deficiency):</p>
+        <div class="color-display" id="tritanopia"></div>
+      </div>
+    </div>
+  </div>
+</body>
+  
+  <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  // DOM elements
+  const colorInput = document.getElementById('colorInput');
+  const hexInput = document.getElementById('hexInput');
+  const rSlider = document.getElementById('rSlider');
+  const gSlider = document.getElementById('gSlider');
+  const bSlider = document.getElementById('bSlider');
+  const brightnessSlider = document.getElementById('brightnessSlider');
+  const contrastSlider = document.getElementById('contrastSlider');
+  const selectedColor = document.getElementById('selectedColor');
+  const colorScheme = document.getElementById('colorScheme');
+  const schemeDisplay = document.getElementById('schemeDisplay');
+  const bgColor = document.getElementById('bgColor');
+  const fgColor = document.getElementById('fgColor');
+  const contrastRatio = document.getElementById('contrastRatio');
+  const contrastMessage = document.getElementById('contrastMessage');
+  const saveBtn = document.getElementById('saveBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const hexValue = document.getElementById('hexValue');
+  const rgbValue = document.getElementById('rgbValue');
+  const hslValue = document.getElementById('hslValue');
+
+  // Initialize color picker with default values
+  const initialColor = '#000000';
+  colorInput.value = initialColor;
+  hexInput.value = initialColor;
+  updateColorFromSliders();
+
+  // Event listeners
+  colorInput.addEventListener('input', () => {
+    hexInput.value = colorInput.value;
+    updateColorFromSliders();
+    updateSchemeDisplay();
+  });
+
+  hexInput.addEventListener('input', () => {
+    colorInput.value = hexInput.value;
+    updateColorFromSliders();
+    updateSchemeDisplay();
+  });
+
+  [rSlider, gSlider, bSlider, brightnessSlider, contrastSlider].forEach(slider => {
+    slider.addEventListener('input', updateColorFromSliders);
+  });
+
+  colorScheme.addEventListener('change', updateSchemeDisplay);
+
+  [bgColor, fgColor].forEach(input => {
+    input.addEventListener('input', updateContrastChecker);
+  });
+
+  saveBtn.addEventListener('click', saveColorData);
+  exportBtn.addEventListener('click', exportColorData);
+
+  // Functions
+  function updateColorFromSliders() {
+    const r = parseInt(rSlider.value);
+    const g = parseInt(gSlider.value);
+    const b = parseInt(bSlider.value);
+    const brightness = parseInt(brightnessSlider.value) - 100;
+    const contrast = parseInt(contrastSlider.value) - 100;
+    const adjusted = applyBrightnessContrast(r, g, b, brightness, contrast);
+    const color = `rgb(${adjusted.r}, ${adjusted.g}, ${adjusted.b})`;
+    selectedColor.style.backgroundColor = color;
+    const hex = rgbToHex(adjusted.r, adjusted.g, adjusted.b);
+    hexInput.value = hex;
+    hexValue.textContent = hex;
+    rgbValue.textContent = `rgb(${adjusted.r}, ${adjusted.g}, ${adjusted.b})`;
+    const hsl = rgbToHsl(adjusted.r, adjusted.g, adjusted.b);
+    hslValue.textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+    
+    updateColorBlindnessSimulations();
+  }
+
+  function applyBrightnessContrast(r, g, b, brightness, contrast) {
+    const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+    r = factor * (r - 128) + 128 + brightness;
+    g = factor * (g - 128) + 128 + brightness;
+    b = factor * (b - 128) + 128 + brightness;
+    return { r: clamp(r, 0, 255), g: clamp(g, 0, 255), b: clamp(b, 0, 255) };
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function rgbToHex(r, g, b) {
+    const toHex = (n) => n.toString(16).padStart(2, '0').toUpperCase();
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+
+  function updateSchemeDisplay() {
+    const baseColor = colorInput.value;
+    const schemeType = colorScheme.value;
+    const colors = generateColorScheme(baseColor, schemeType);
+    displayColorScheme(colors);
+  }
+
+  function generateColorScheme(baseColor, scheme) {
+    return [baseColor, '#FFFFFF', '#000000'];
+  }
+
+  function displayColorScheme(colors) {
+    schemeDisplay.innerHTML = '';
+    colors.forEach(color => {
+      const div = document.createElement('div');
+      div.style.backgroundColor = color;
+      div.className = 'scheme-color';
+      schemeDisplay.appendChild(div);
+    });
+  }
+
+  function calculateContrastRatio(color1, color2) {
+    const luminance = (color) => {
+      const rgb = hexToRgb(color);
+      const a = [rgb.r, rgb.g, rgb.b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    };
+    const l1 = luminance(color1) + 0.05;
+    const l2 = luminance(color2) + 0.05;
+    return l1 > l2 ? l1 / l2 : l2 / l1;
+  }
+
+  function hexToRgb(hex) {
+    const bigint = parseInt(hex.substring(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = (bigint & 255);
+    return { r, g, b };
+  }
+
+  function updateContrastChecker() {
+    const bg = bgColor.value;
+    const fg = fgColor.value;
+    const ratio = calculateContrastRatio(bg, fg);
+    contrastRatio.textContent = ratio.toFixed(2);
+    contrastMessage.textContent = ratio >= 4.5 ? 'Passes WCAG AA' : 'Fails WCAG AA';
+  }
+
+  function saveColorData() {
+    const data = {
+      color: colorInput.value,
+      hex: hexValue.textContent,
+      rgb: rgbValue.textContent,
+      hsl: hslValue.textContent,
+      scheme: Array.from(schemeDisplay.children).map(div => div.style.backgroundColor)
+    };
+    localStorage.setItem('colorPickerData', JSON.stringify(data));
+    alert('Color data saved!');
+  }
+
+  function exportColorData() {
+    const data = {
+      color: colorInput.value,
+      hex: hexValue.textContent,
+      rgb: rgbValue.textContent,
+      hsl: hslValue.textContent,
+      scheme: Array.from(schemeDisplay.children).map(div => div.style.backgroundColor)
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'color-data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Color blindness simulation functions
+  function simulateProtanopia(r, g, b) {
+    return simulateCVD(r, g, b, 0.56667, 0.43333, 0.0, 0.55833, 0.44167, 0.0, 0.0, 0.24167, 0.75833);
+  }
+
+  function simulateDeuteranopia(r, g, b) {
+    return simulateCVD(r, g, b, 0.625, 0.375, 0.0, 0.7, 0.3, 0.0, 0.0, 0.3, 0.7);
+  }
+
+  function simulateTritanopia(r, g, b) {
+    return simulateCVD(r, g, b, 0.95, 0.05, 0.0, 0.0, 0.43333, 0.56667, 0.0, 0.475, 0.525);
+  }
+
+  function simulateCVD(r, g, b, rr, rg, rb, gr, gg, gb, br, bg, bb) {
+    const nr = rr * r + rg * g + rb * b;
+    const ng = gr * r + gg * g + gb * b;
+    const nb = br * r + bg * g + bb * b;
+    return { r: Math.round(nr), g: Math.round(ng), b: Math.round(nb) };
+  }
+
+  function updateColorBlindnessSimulations() {
+    const r = parseInt(rSlider.value);
+    const g = parseInt(gSlider.value);
+    const b = parseInt(bSlider.value);
+    const brightness = parseInt(brightnessSlider.value) - 100;
+    const contrast = parseInt(contrastSlider.value) - 100;
+    const adjusted = applyBrightnessContrast(r, g, b, brightness, contrast);
+    
+    const protanopia = simulateProtanopia(adjusted.r, adjusted.g, adjusted.b);
+    const deuteranopia = simulateDeuteranopia(adjusted.r, adjusted.g, adjusted.b);
+    const tritanopia = simulateTritanopia(adjusted.r, adjusted.g, adjusted.b);
+    
+    document.getElementById('protanopia').style.backgroundColor = `rgb(${protanopia.r}, ${protanopia.g}, ${protanopia.b})`;
+    document.getElementById('deuteranopia').style.backgroundColor = `rgb(${deuteranopia.r}, ${deuteranopia.g}, ${deuteranopia.b})`;
+    document.getElementById('tritanopia').style.backgroundColor = `rgb(${tritanopia.r}, ${tritanopia.g}, ${tritanopia.b})`;
+  }
+
+  updateColorFromSliders();
+  updateSchemeDisplay();
+  updateContrastChecker();
+});
+ </script>
+</html>

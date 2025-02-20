@@ -1,0 +1,55 @@
+
+
+
+toPickerValue(pickerValue) {  
+    if(this.activePicker === "hsl" || this.activePicker === "HSL"){
+        return pickerValue;
+    } else if(this.activePicker === "rgb" || this.activePicker === "RGB"){
+        const hslToRgb = hslToRgbReturnsObject(pickerValue);
+        return hslToRgb
+    } else if(this.activePicker === "cmyk" || this.activePicker === "CMYK"){
+        const hslToRgb = hslToRgbReturnsObject(pickerValue);
+        return hslToRgb; 
+    }
+if(pickerValue.hasOwnProperty("h") 
+    && pickerValue.hasOwnProperty("s")
+    && pickerValue.hasOwnProperty("l")){
+    return pickerValue
+    }
+    else if(pickerValue.hasOwnProperty("r") 
+        && pickerValue.hasOwnProperty("g")
+        && pickerValue.hasOwnProperty("b")){
+        const rgbToHsl =  rgbToHslReturnsObject(pickerValue); 
+    return rgbToHsl
+        }   
+    else if(pickerValue.hasOwnProperty("c") 
+        && pickerValue.hasOwnProperty("m")
+        && pickerValue.hasOwnProperty("y")
+        && pickerValue.hasOwnProperty("k")
+        )
+        {
+        const cmykTOHsl = cmykToHslReturnsObject(pickerValue);     
+        return cmykTOHsl
+    }
+        }
+
+
+
+        extenalColorSettersInit(colorChange){
+            if(typeof(colorChange) === "object"){
+
+                if(this.activePicker === "HSL"){
+                return this.hslColorChangeInit(colorChange);
+                }  
+                else if(this.activePicker === "RGB"){
+                    return this.rgbColorChangeInit(colorChange);
+                }
+                else if(this.activePicker === "CMYK"){
+                    return this.cmykColorChangeInit(colorChange);
+                } 
+       }else{
+        console.log("Omo invalid data type")
+        return
+       }
+    }
+
