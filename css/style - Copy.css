@@ -1,211 +1,276 @@
-*
-{
-    box-sizing: border-box;
-    transition: .5s ease-in-out;
-    user-select: none;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+/* Scope everything inside the color picker wrapper */
+.my-color-picker * {
+  box-sizing: border-box;
+  transition: 0.5s ease-in-out;
+  user-select: none;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-body,#wrapper
-{
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    gap: 10rem;
-    box-sizing: border-box;
+.my-color-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
+  width: fit-content;
 }
 
-.colorPickers
-{
-    width: 20rem;
-    height: 25rem;
-    display: flex;
-    border-radius: .5rem;
-    align-items: center;
-    gap: .5rem;
-    flex-direction: column;
-    padding: .5rem;
-    box-shadow:  0px  0 1rem black;
+.my-color-picker #test {
+  display: flex;
+  align-items: center;
+  gap: 5rem;
 }
 
-.cmykPicker{
-    height: 27rem;
-}
-.preview
-{
-    background: #000;
-    width: 100%;
-   height: 10rem;
-    border-radius: .5rem;
-    color: white;
-    align-content: center;
-    text-align: center;
+.my-color-picker .colorPickers {
+  width: 16rem;
+  height: 22rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 0 1rem black;
 }
 
-.sliderContainer
-{
-    position: relative;
-    width: 100%;
-   display: flex;
-   flex-direction: column;
-   gap: .5rem;
+.my-color-picker .cmykPicker {
+  width: 18rem;
+  height: 24rem;
 }
 
-.colorIdentifyer{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: hsl(0, 0%, 20%);
-    font-size: 1rem;
-   .text{
-    color: hsl(0, 0%, 20%);
-    max-width: 2.5rem;
-    max-height: 2.5rem;
-    font-size: 1rem;
-    border-radius: .2rem;
-    border: 1.5px solid grey;
-    text-align: center;
-    font-weight: bolder;
-    background: none;
-   } 
+.my-color-picker .preview {
+  width: 100%;
+  height: 8rem;
+  border-radius: 0.5rem;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.slider
-{
-   flex: 1; 
-    width: 100%;
-    height: .8rem;
-    border-radius: 1rem;
-    -webkit-appearance: none;
-    appearance: none;
-    -moz-appearance: none;
+.my-color-picker .sliderContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-
-#hue::-moz-range-track
-{
-    appearance: none;
-    height: .8rem;
-    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
-    border-radius: 1rem;
-}
-#hue::-webkit-slider-runnable-track
-{
-height: .8rem;
-appearance: none;
-background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
-border-radius: 1rem;
+.my-color-picker .colorIdentifyer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: hsl(0, 0%, 20%);
 }
 
-.sSlider::-webkit-slider-runnable-track
-{
-    height: .8rem;
-    appearance: none;
-    border-radius: 1rem;
-    background: #000;
-    
-}
-.sSlider::-moz-range-track
-{
-    height: .8rem;
-    appearance: none;
-    border-radius: 1rem;
-    
+.my-color-picker .colorIdentifyer .text {
+  color: hsl(0, 0%, 20%);
+  max-width: 2rem;
+  max-height: 2rem;
+  border-radius: 0.2rem;
+  border: 1.5px solid grey;
+  text-align: center;
+  font-weight: bolder;
+  background: none;
 }
 
-.slider::-webkit-slider-thumb,.sSlider::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 1.2rem;
-    height: 1.2rem;
-    border: 5px solid white;
-    outline: 1px solid black;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: -4px;
-
-}
-.slider::-webkit-slider-thumb:active,.sSlider::-webkit-slider-thumb:active
-{
-    outline: .8px solid blue;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 7px solid white;
-}
-.extraOptions
-{
-    z-index: 3;
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
+.my-color-picker .slider,
+.my-color-picker .sSlider {
+  flex: 1;
+  width: 100%;
+  height: 0.6rem;
+  border-radius: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-.extraOptions svg,.sections svg{
-width: 1rem;
-margin-right: .8rem;
-fill: rgb(36, 36, 36);
-}
-.extraOptions svg:active,.sections svg:active{
-    width: 1rem;
-    margin-right: .8rem;
-    fill: black;
-    }
-.sections
-{
-    border-radius: .5rem;
-    align-items: center;
-    transition: 0.2s ease-in;
-    cursor: pointer;
-    user-select: none;
-    position: relative;
+.my-color-picker #hue::-moz-range-track {
+  appearance: none;
+  height: 0.6rem;
+  background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+  border-radius: 1rem;
 }
 
-.sections.active .options
-{
-    display: block;
+.my-color-picker #hue::-webkit-slider-runnable-track {
+  height: 0.6rem;
+  background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+  border-radius: 1rem;
 }
 
-.activeSection
-{
-    
-    padding: .5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-
-}
-.activeSection h3
-{
-    font-size: 15px;
-    padding: 0;
-    margin: 0;
+.my-color-picker .sSlider::-webkit-slider-runnable-track,
+.my-color-picker .sSlider::-moz-range-track {
+  height: 0.6rem;
+  border-radius: 1rem;
 }
 
-
-.options
-{
-    position: absolute;
-    width: 10rem;
-    top: -5rem;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    padding: .2rem;
-    background: beige;
-    font-weight: 700;
-    display: none;
-}
-.option
-{
-text-align: center;
-background: white;
-border-radius: 5px;
-list-style: none;
+.my-color-picker .slider::-webkit-slider-thumb,
+.my-color-picker .sSlider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 5px solid white;
+  outline: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px;
 }
 
+.my-color-picker .slider::-webkit-slider-thumb:active,
+.my-color-picker .sSlider::-webkit-slider-thumb:active {
+  outline: 0.8px solid blue;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 7px solid white;
+}
+
+.my-color-picker .extraOptions,
+.my-color-picker .sections {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.my-color-picker .extraOptions svg,
+.my-color-picker .sections svg {
+  width: 0.8rem;
+  margin-right: 0.4rem;
+  fill: rgb(36, 36, 36);
+}
+
+.my-color-picker .sections {
+  border-radius: 0.5rem;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.my-color-picker .sections.active .options {
+  display: block;
+}
+
+.my-color-picker .activeSection {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.my-color-picker .activeSection h3 {
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 0;
+}
+
+.my-color-picker .options {
+  position: absolute;
+  top: -8rem;
+  width: 8rem;
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 0 0.5rem black;
+  display: none;
+  flex-direction: column;
+  padding: 0.2rem;
+}
+
+.my-color-picker .option {
+  padding: 0.2rem 0;
+  text-align: center;
+  list-style: none;
+  border-bottom: 1px solid black;
+}
+
+.my-color-picker .option:nth-of-type(4) {
+  border: none;
+}
+
+.my-color-picker .hexColorPicker {
+  justify-content: flex-start;
+  gap: 1rem;
+  height: 28rem;
+}
+
+.my-color-picker .huePickerWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2rem;
+}
+
+.my-color-picker .colorCode {
+  width: 60%;
+  height: 2rem;
+  border: 1px solid grey;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.my-color-picker .huePicker {
+  margin: 0;
+  padding: 0;
+  border-radius: inherit;
+}
+
+.my-color-picker .hexCursor {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: transparent;
+  border: 0.4rem solid white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.my-color-picker .hexCursor:active {
+  outline: 1px solid blue;
+}
+
+.my-color-picker .hueCursor {
+  left: 0;
+}
+
+.my-color-picker .saturaionBrightnessWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 1rem;
+  background: gray;
+}
+
+.my-color-picker .saturationBrightness {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: inherit;
+}
+
+.my-color-picker .saturationBrighnessCursor {
+  top: 50%;
+  right: 0%;
+}
+
+.my-color-picker .colorPreview {
+  width: 100%;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

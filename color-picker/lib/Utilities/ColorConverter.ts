@@ -1,4 +1,4 @@
-import { CMYK, HSL, RGB } from "../types/ColorTypes";
+import type { CMYK, HSL, RGB } from "../../types/ColorTypes";
 
 
 export const ColorConverter = {
@@ -57,7 +57,7 @@ export const ColorConverter = {
    * 🔹 Convert CMYK (0-100) to HEX
    */
   cmykToHexInit(cmyk : CMYK): string {
-    return this.cmykToHex(cmyk.c / 100, cmyk.m / 100, cmyk.y / 100, cmyk.k / 100);
+    return this.cmykToHex({ c: cmyk.c / 100, m: cmyk.m / 100, y: cmyk.y / 100, k: cmyk.k / 100});
   },
 
   /**
@@ -293,6 +293,38 @@ cmykToHsl(cmyk : CMYK) : HSL {
     s: Math.round(s * 100),
     l: Math.round(l * 100),
   };
+}
+
+,
+
+/**
+ * Universal conversion to HSL
+ */toHSL(color: RGB | CMYK | HSL): HSL {
+  if ("h" in color && "s" in color && "l" in color) return color; // Already HSL
+  if ("r" in color && "g" in color && "b" in color) return ColorConverter.rgbToHsl(color); // RGB -> HSL
+  if ("c" in color && "m" in color && "y" in color && "k" in color) return ColorConverter.cmykToHsl(color); // CMYK -> HSL
+  throw new Error("Unsupported color format");
+}
+,
+/**
+ * Universal conversion to RGB
+ */
+ toRGB(color: HSL | CMYK | RGB): RGB {
+  if ("r" in color && "g" in color && "b" in color) return color; // Already RGB
+  if ("h" in color && "s" in color && "l" in color) return ColorConverter.hslToRgb(color); // HSL -> RGB
+  if ("c" in color && "m" in color && "y" in color && "k" in color) return ColorConverter.cmykToRgb(color); // CMYK -> RGB
+  throw new Error("Unsupported color format");
+}
+
+/**
+ * Universal conversion to CMYK
+ */
+  ,
+   toCMYK(color : HSL | RGB | CMYK): CMYK {
+  if ("c" in color && "m" in color && "y" in color && "k" in color) return color; // Already CMYK
+  if ("h" in color && "s" in color && "l" in color) return ColorConverter.hslToCmyk(color); // HSL -> CMYK
+  if ("r" in color && "g" in color && "b" in color) return ColorConverter.rgbToCmyk(color); // RGB -> CMYK
+  throw new Error("Unsupported color format");
 }
 }
 

@@ -10,8 +10,9 @@
 // NOTE: These are assumed to be implemented elsewhere.
 // We'll type them so TypeScript knows their signatures.
 
-import { AnyColor, CMYK, ColorValue, ContrastRatios, HSL, RGB } from "../types/ColorTypes.js";
-import { ColorConverter } from "./ColorCOnverter.js";
+import type { AnyColor, CMYK, ColorValue, ContrastRatios, HSL, RGB } from "../../types/ColorTypes.js";
+
+import { ColorConverter } from "./ColorConverter.js";
 
 
 
@@ -199,3 +200,7 @@ export const colorManagers = {
     console.log("Updated Contrast Ratios:", this.colorRatio);
   },
 };
+
+
+
+

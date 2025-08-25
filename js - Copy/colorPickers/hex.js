@@ -6,10 +6,10 @@ export const hexPicker = (externalColorInit) =>{
         hexPickerDivElement.id = "hexColorPicker";
     hexPickerDivElement.innerHTML = 
     `
-    <div class="saturaionBrightnessWrapper">
+    <div class="saturationBrightnessWrapper">
    <canvas id="saturationBrightness" class="saturationBrightness"  
    width="240" height="240"></canvas>
-    <div class="saturationBrighnessCursor hexCursor" id="saturationBrighnessCursor"></div>
+    <div class="saturationBrightnessCursor hexCursor" id="saturationBrightnessCursor"></div>
    </div>
    <div class="huePickerWrapper">
     <canvas id="huePicker" class="huePicker"  
@@ -62,7 +62,7 @@ const saturationBrightness = hexPickerDivElement.querySelector("#saturationBrigh
 const hueCtx = huePicker.getContext("2d", { willReadFrequently: true });
 const SBCtx = saturationBrightness.getContext("2d", { willReadFrequently: true });
 const hueCursor = hexPickerDivElement.querySelector("#hueCursor");
-const saturationBrighnessCursor = hexPickerDivElement.querySelector("#saturationBrighnessCursor");
+const saturationBrightnessCursor = hexPickerDivElement.querySelector("#saturationBrightnessCursor");
 const preview = hexPickerDivElement.querySelector("#preview");
 const colorCode = hexPickerDivElement.querySelector("#colorCode");
 const colorNames = new NTC();
@@ -204,8 +204,8 @@ const updateSBPicker  = (X, Y) =>{
     const clampedX = Math.min(Math.max(0, mouseX), saturationBrightness.width);
     const clampedY = Math.min(Math.max(0, mouseY), saturationBrightness.height);
 
-    saturationBrighnessCursor.style.left = `${clampedX - saturationBrighnessCursor.offsetWidth / 2}px`;
-    saturationBrighnessCursor.style.top = `${clampedY - saturationBrighnessCursor.offsetHeight / 2}px`;
+    saturationBrightnessCursor.style.left = `${clampedX - saturationBrightnessCursor.offsetWidth / 2}px`;
+    saturationBrightnessCursor.style.top = `${clampedY - saturationBrightnessCursor.offsetHeight / 2}px`;
 
     saturation = clampedX / saturationBrightness.width;
     brightness = 1 - (clampedY / saturationBrightness.height);
@@ -226,7 +226,7 @@ const updateHuePicker = (e) =>{
     const hueCursorX = Math.min(Math.max(0, mouseX), huePicker.width);
 
     /* const saturationRect = saturationBrightness.getBoundingClientRect()
-    const sbCursorPosition = saturationBrighnessCursor.getBoundingClientRect();  */  
+    const sbCursorPosition = saturationBrightnessCursor.getBoundingClientRect();  */  
     hueCursor.style.left = `${hueCursorX- hueCursor.offsetWidth /2}px`
     hueCursor.style.top = `${huePicker.height / 2 - hueCursor.offsetHeight /2}px`
 
@@ -237,8 +237,8 @@ const updateHuePicker = (e) =>{
     console.log('Saturation from hsl:' + saturation);
     console.log('Brightness from hsl:' + brightness);
 
-     saturation =  saturationBrightness.offsetWidth / saturationBrighnessCursor.offsetWidth;
-     brightness = saturationBrightness.offsetHeight / saturationBrighnessCursor.offsetHeight;
+     saturation =  saturationBrightness.offsetWidth / saturationBrightnessCursor.offsetWidth;
+     brightness = saturationBrightness.offsetHeight / saturationBrightnessCursor.offsetHeight;
      
 
     /* saturation =    sbCursorPosition.left -  saturationRect.left 
@@ -265,12 +265,12 @@ const hueCursorX = hue * huePicker.width;  // Calculate X position from hue valu
 hueCursor.style.left = `${hueCursorX - hueCursor.offsetWidth / 2}px`;  // Update the cursor position
 
 // 2. Update the Saturation-Brightness Cursor position based on saturation and brightness values
-const sbCursorX = saturation * saturationBrighnessCursor.height;  // Calculate X position from saturation value (0 to 1)
-const sbCursorY = (1 - brightness) * saturationBrighnessCursor.width;  // Calculate Y position from brightness value (0 to 1)
+const sbCursorX = saturation * saturationBrightnessCursor.height;  // Calculate X position from saturation value (0 to 1)
+const sbCursorY = (1 - brightness) * saturationBrightnessCursor.width;  // Calculate Y position from brightness value (0 to 1)
 console.log(sbCursorX,sbCursorY,saturation,brightness);
 // Update the cursor position
-saturationBrighnessCursor.style.left = `${sbCursorX - saturationBrighnessCursor.offsetWidth / 2}px`;
-saturationBrighnessCursor.style.top = `${sbCursorY - saturationBrighnessCursor.offsetHeight / 2}px`;
+saturationBrightnessCursor.style.left = `${sbCursorX - saturationBrightnessCursor.offsetWidth / 2}px`;
+saturationBrightnessCursor.style.top = `${sbCursorY - saturationBrightnessCursor.offsetHeight / 2}px`;
 
     preview.style.backgroundColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`    
 

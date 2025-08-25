@@ -48,3 +48,10 @@ export interface ContrastRatios {
   textToAccent: string;
   textToMain: string;
 }
+
+export interface HSLColor {
+  h: number;
+  s: number;
+  l: number;
+}
+

@@ -30,7 +30,7 @@ Sample Usage:
 
 */
 
-import { HSL, NamedColor, RGB } from "../types/ColorTypes";
+import type { HSL, NamedColor, RGB } from "../../types/ColorTypes";
 
 
   // ntc.js
