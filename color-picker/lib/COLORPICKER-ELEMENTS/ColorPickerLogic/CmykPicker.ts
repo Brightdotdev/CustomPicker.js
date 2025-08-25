@@ -33,6 +33,11 @@ interface CmykElements{
     CmykElement: HTMLDivElement;
 } 
 
+
+interface ColorPickerExport  {
+    ColorPickerElement : HTMLDivElement | void,
+    setExternalColor :(externalColor : CMYK) => void
+}
 // Libaries
 
 
@@ -110,13 +115,15 @@ const ProfileCmykElements =(CmykElement : HTMLDivElement) : CmykElements  =>{
 const HandleUiUpdate = (colorUpdate : CMYK , targetColorElement : targetElementPorps , cmykElements : CmykElements  ) => {
    
     const colorNames = new NTC();
+    const {cyan, magenta,yellow,black, colorDisplay , CmykElement} = cmykElements
 
     const c = colorUpdate.c / 100;
     const m = colorUpdate.m / 100;
     const y = colorUpdate.y / 100;
     const k = colorUpdate.k / 100;
+
     const CMYK = { c, m, y, k };
-    const {cyan, magenta,yellow,black, colorDisplay , CmykElement} = cmykElements
+    
     const hex = ColorConverter.cmykToHex(CMYK);
     const name = colorNames.getColorName(hex);
 
@@ -166,7 +173,7 @@ const HandleUiUpdate = (colorUpdate : CMYK , targetColorElement : targetElementP
 
 
 
-const CMYKELEMENTPICKER = ({colorPickerContainer,  targetColorElements ,initialColor} : PickerProps ) : HTMLDivElement | void => {
+const CMYKELEMENTPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport => {
 
 let CmykElement : HTMLDivElement = CmykHtmlContent
 CmykElement.appendChild(ExtraOptionsElements)
@@ -227,22 +234,32 @@ const  {
    */
   const updateUI = debounce(() => {
 
-    if(initialColor){
-        HandleUiUpdate(initialColor,targetColorElements,
-    cmykElements);
-    }else{
     const colorUpdate : CMYK = {c:  +cyan.value ,m : +magenta.value, y: +yellow.value, k : +black.value};
         HandleUiUpdate(colorUpdate,targetColorElements,
     cmykElements);
-    }
+    
   }, 100);
 
-  
 
-  
+
+  const setExternalColor = (externalColor : CMYK) => {
+    if(externalColor){
+        HandleUiUpdate(externalColor,targetColorElements,cmykElements);}}
+
+
   updateUI();
 
-   colorPickerContainer !== undefined ? colorPickerContainer.appendChild(CmykElement) : CmykElement;
+
+  
+
+return {
+
+    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(CmykElement) : CmykElement,
+    setExternalColor
+
+}
+
+
 }
 
 export default CMYKELEMENTPICKER
