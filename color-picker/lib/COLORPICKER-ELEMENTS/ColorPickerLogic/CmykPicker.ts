@@ -2,42 +2,14 @@ import CmykHtmlContent from "../HtmlGnenrators/CmykHtmlContent"
 import ExtraOptionsElements from "../HtmlGnenrators/ExtraOptionsElement"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
-import {debounce} from "../../Utilities/MicroFunctionalities"
+import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
 import "../main.css"
 
 
 import type {RGB ,CMYK} from "../../../types/ColorTypes"
-
-type targetElementPorps = {
-    targetElement : HTMLElement[] | HTMLElement | NodeListOf<HTMLDivElement> ,
-    targetStylePorperty : "text" | "background"
-}
+import type {targetElementPorps ,PickerProps,CmykElements, ColorPickerExport } from "../../../types/ColorPickerTypes"
 
 
-interface PickerProps {
-    colorPickerContainer? : HTMLElement;
-    targetColorElements : targetElementPorps ;
-    initialColor?: CMYK | null
-} 
-
-interface CmykElements{
-    cyan : HTMLInputElement;
-    magenta : HTMLInputElement;
-    yellow: HTMLInputElement;
-    black: HTMLInputElement;
-    cyanText: HTMLInputElement;
-    magentaText: HTMLInputElement;
-    yellowText: HTMLInputElement;
-    blackText: HTMLInputElement;
-    colorDisplay: HTMLDivElement;
-    CmykElement: HTMLDivElement;
-} 
-
-
-interface ColorPickerExport  {
-    ColorPickerElement : HTMLDivElement | void,
-    setExternalColor :(externalColor : CMYK) => void
-}
 // Libaries
 
 
@@ -58,6 +30,8 @@ const ProfileCmykElements =(CmykElement : HTMLDivElement) : CmykElements  =>{
   const black = CmykElement.querySelector<HTMLInputElement>("#black")!;
   const blackText = CmykElement.querySelector<HTMLInputElement>("#blackText")!;
   const colorDisplay = CmykElement.querySelector<HTMLDivElement>(".preview")!;
+  const eyeDropperButton = CmykElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
+  const copyButton = CmykElement.querySelector<HTMLDivElement>(".copyDiv")!;
 
 
   return {
@@ -70,7 +44,9 @@ const ProfileCmykElements =(CmykElement : HTMLDivElement) : CmykElements  =>{
     yellowText,
     blackText,
     colorDisplay,
-    CmykElement
+    CmykElement,
+    eyeDropperButton,
+    copyButton
 } 
 }
 
@@ -173,7 +149,7 @@ const HandleUiUpdate = (colorUpdate : CMYK , targetColorElement : targetElementP
 
 
 
-const CMYKELEMENTPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport => {
+const CMYKELEMENTPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<CMYK> => {
 
 let CmykElement : HTMLDivElement = CmykHtmlContent
 CmykElement.appendChild(ExtraOptionsElements)
@@ -188,7 +164,9 @@ const  {
     cyanText,
     magentaText,
     yellowText,
-    blackText
+    blackText,
+   eyeDropperButton,
+    copyButton,
 } = cmykElements
 
     /**
@@ -213,6 +191,41 @@ const  {
     updateUI();
   };
 
+  const handleEyeDropper = async () => {
+    const color  = await pickColorWithEyeDropper()
+    console.log(color);
+    const cmykColor = ColorConverter.hexToCmyk(color || "#000000") 
+    console.log(cmykColor)
+     cyan.value = cmykColor.c.toString();
+        cyanText.value = cmykColor.c.toString();
+
+         magenta.value = cmykColor.m.toString();
+        magentaText.value = cmykColor.m.toString();
+
+          yellow.value = cmykColor.y.toString();
+              yellowText.value = cmykColor.y.toString();
+
+            black.value = cmykColor.k.toString();
+        blackText.value = cmykColor.k.toString();
+        HandleUiUpdate(cmykColor,targetColorElements,cmykElements);
+    
+  }
+  const handleColorCopy = async () => {
+ 
+    
+        const color = `cmyk(${cyanText.value}%, ${magentaText.value}%, ${yellowText.value}%, ${blackText.value}%)`
+        const isCopied =  await copyToClipboard(color)
+
+        if(isCopied){
+           console.log(color)
+            return console.log("Success")
+        }else{
+            console.log("omo")
+        }
+        
+    
+  }
+
 
   // Event listeners
   cyan.addEventListener("input", syncSlidersToText);
@@ -226,6 +239,10 @@ const  {
   blackText.addEventListener("input", syncTextToSliders);
 
 
+  eyeDropperButton.addEventListener("click", handleEyeDropper);
+  copyButton.addEventListener("click", handleColorCopy);
+
+
 
 
 
@@ -234,20 +251,33 @@ const  {
    */
   const updateUI = debounce(() => {
 
-    const colorUpdate : CMYK = {c:  +cyan.value ,m : +magenta.value, y: +yellow.value, k : +black.value};
+    const colorUpdate : CMYK =  {c:  +cyan.value ,m : +magenta.value, y: +yellow.value, k : +black.value};
         HandleUiUpdate(colorUpdate,targetColorElements,
     cmykElements);
     
-  }, 100);
+}, 100);
 
 
+updateUI();
 
   const setExternalColor = (externalColor : CMYK) => {
     if(externalColor){
-        HandleUiUpdate(externalColor,targetColorElements,cmykElements);}}
+        cyan.value = externalColor.c.toString();
+        cyanText.value = externalColor.c.toString();
+
+         magenta.value = externalColor.m.toString();
+        magentaText.value = externalColor.m.toString();
+
+          yellow.value = externalColor.y.toString();
+              yellowText.value = externalColor.y.toString();
+
+            black.value = externalColor.k.toString();
+        blackText.value = externalColor.k.toString();
+        HandleUiUpdate(externalColor,targetColorElements,cmykElements);
+    
+    }}
 
 
-  updateUI();
 
 
   

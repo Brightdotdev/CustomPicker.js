@@ -204,3 +204,61 @@ export const colorManagers = {
 
 
 
+/**
+ * Launches the EyeDropper API and returns the picked color as a hex string (#RRGGBB).
+ * 
+ * @returns Promise<string | null> - The hex color string (e.g. "#ff5733"), 
+ *                                   or null if cancelled or unsupported.
+ */
+export async function pickColorWithEyeDropper(): Promise<string | null> {
+ 
+  
+  if (!("EyeDropper" in window)) {
+    alert("EyeDropper API is not supported in this browser.");
+    return null;
+  }
+
+  try {
+    
+    const eyeDropper = new (window as any).EyeDropper();
+    const result: { sRGBHex: string } = await eyeDropper.open();
+    return result.sRGBHex;
+  } catch (error) {
+    console.error("EyeDropper cancelled or failed:", error);
+    return null;
+  }
+}
+
+
+/**
+ * Copies a given text string to the clipboard.
+ * 
+ * @param text - The string to copy.
+ * @returns Promise<boolean> - true if successful, false otherwise.
+ */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    // Modern API (works in most browsers)
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    console.warn("Clipboard API failed, trying fallback...", error);
+
+    // Fallback for older browsers
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed"; // Prevent scrolling to bottom
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+
+      const success = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return success;
+    } catch (err) {
+      console.error("Copy to clipboard failed:", err);
+      return false;
+    }
+  }
+}

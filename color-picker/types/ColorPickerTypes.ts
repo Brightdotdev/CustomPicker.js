@@ -1,0 +1,54 @@
+
+import type {RGB, HSL ,CMYK} from "./ColorTypes"
+
+export type targetElementPorps = {
+    targetElement : HTMLElement[] | HTMLElement | NodeListOf<HTMLDivElement> ,
+    targetStylePorperty : "text" | "background"
+}
+
+
+export interface PickerProps {
+    colorPickerContainer? : HTMLElement;
+    targetColorElements : targetElementPorps;
+} 
+
+export interface CmykElements{
+    cyan : HTMLInputElement;
+    magenta : HTMLInputElement;
+    yellow: HTMLInputElement;
+    black: HTMLInputElement;
+    cyanText: HTMLInputElement;
+    magentaText: HTMLInputElement;
+    yellowText: HTMLInputElement;
+    blackText: HTMLInputElement;
+    colorDisplay: HTMLDivElement;
+    eyeDropperButton: HTMLDivElement;
+    copyButton: HTMLDivElement;
+    CmykElement: HTMLDivElement;
+} 
+
+
+export interface HslElements{
+    hue : HTMLInputElement;
+    saturation : HTMLInputElement;
+    lightness: HTMLInputElement;
+    
+    hueText: HTMLInputElement;
+    saturationText: HTMLInputElement;
+    lightnessText: HTMLInputElement;
+    colorDisplay: HTMLDivElement;
+    eyeDropperButton: HTMLDivElement;
+    copyButton: HTMLDivElement;
+    HslElement: HTMLDivElement;
+} 
+
+
+
+type anyColorType = CMYK | HSL | RGB
+
+
+
+export interface ColorPickerExport<T extends anyColorType> {
+    ColorPickerElement: HTMLDivElement | void,
+    setExternalColor: (externalColor: T) => void
+}

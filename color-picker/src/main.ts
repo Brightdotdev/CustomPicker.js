@@ -34,6 +34,9 @@ const pickerContainer = document.getElementById("color-picker-container")!;
 const primaryNodes = document.querySelectorAll<HTMLDivElement>(".color-preview")!
 
 // 2. Create a ColorPickers instance
-const initialColor = {c :65, m :33, y :43, k :40};
+const initialColor = {c :65, m :33, y :3, k :40};
+
 CMYKELEMENTPICKER({colorPickerContainer : pickerContainer,
-  targetColorElements : {  targetElement : primaryNodes, targetStylePorperty : "text"}, initialColor});
+  targetColorElements : {  targetElement : primaryNodes, targetStylePorperty : "text"}}).setExternalColor(initialColor)
+
+  

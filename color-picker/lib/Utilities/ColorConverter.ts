@@ -2,6 +2,102 @@ import type { CMYK, HSL, RGB } from "../../types/ColorTypes";
 
 
 export const ColorConverter = {
+
+
+  
+/**
+ * Converts hex (#RRGGBB) to RGB.
+ */
+ hexToRgb(hex: string): RGB {
+  // Remove leading # if present
+  hex = hex.replace(/^#/, "");
+
+  if (hex.length !== 6) {
+    throw new Error("Invalid hex color format. Expected #RRGGBB");
+  }
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return { r, g, b };
+}
+,
+/**
+ * Converts hex (#RRGGBB) to HSL.
+ */
+ hexToHsl(hex: string): HSL {
+  const { r, g, b } = this.hexToRgb(hex);
+
+  // Normalize to [0, 1]
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  const delta = max - min;
+
+  let h = 0;
+  let s = 0;
+  let l = (max + min) / 2;
+
+  if (delta !== 0) {
+    s = delta / (1 - Math.abs(2 * l - 1));
+
+    switch (max) {
+      case rNorm:
+        h = ((gNorm - bNorm) / delta) % 6;
+        break;
+      case gNorm:
+        h = (bNorm - rNorm) / delta + 2;
+        break;
+      case bNorm:
+        h = (rNorm - gNorm) / delta + 4;
+        break;
+    }
+
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+
+  return {
+    h: Math.round(h),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100),
+  };
+}
+
+/**
+ * Converts hex (#RRGGBB) to CMYK (percent values 0–100).
+ */
+,  hexToCmyk(hex: string): CMYK {
+  const { r, g, b } = this.hexToRgb(hex);
+
+  if (r === 0 && g === 0 && b === 0) {
+    // Pure black
+    return { c: 0, m: 0, y: 0, k: 100 };
+  }
+
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+
+  const k = 1 - Math.max(rNorm, gNorm, bNorm);
+  const c = (1 - rNorm - k) / (1 - k);
+  const m = (1 - gNorm - k) / (1 - k);
+  const y = (1 - bNorm - k) / (1 - k);
+
+  return {
+    c: Math.round(c * 100),
+    m: Math.round(m * 100),
+    y: Math.round(y * 100),
+    k: Math.round(k * 100),
+  };
+}
+
+,
+
   /**
    * 🔹 Convert HSL to HEX
    */
@@ -143,20 +239,8 @@ export const ColorConverter = {
     return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
   },
 
-  /**
-   * 🔹 Convert HEX to RGB
-   */
-  hexToRgb(hex: string): RGB {
-    hex = hex.replace(/^#/, '');
-    const bigint = parseInt(hex, 16);
-    return {
-      r: (bigint >> 16) & 255,
-      g: (bigint >> 8) & 255,
-      b: bigint & 255,
-    };
-  },
-
-
+  
+  
   /* hsl to cmyk */
 
   hslToCmyk(hsl : HSL): CMYK {
