@@ -123,7 +123,7 @@ const HandleUiUpdate = (colorUpdate : CMYK , targetColorElement : targetElementP
 
 
   const handleTargetElementUpdate = (targetColorElement : targetElementPorps,cmykUpdate : CMYK ) => {
-  // Normalize targetColorElements into a proper array of elements
+  // Normalize targetElements into a proper array of elements
   const elements = 
     targetColorElement.targetElement instanceof NodeList // Check if it's a NodeList
       ? Array.from(targetColorElement.targetElement)     // Convert NodeList to array
@@ -149,7 +149,7 @@ const HandleUiUpdate = (colorUpdate : CMYK , targetColorElement : targetElementP
 
 
 
-const CMYKELEMENTPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<CMYK> => {
+const CMYKELEMENTPICKER = ({colorPickerContainer,  targetElements} : PickerProps ) : ColorPickerExport<CMYK> => {
 
 let CmykElement : HTMLDivElement = CmykHtmlContent
 CmykElement.appendChild(ExtraOptionsElements)
@@ -207,7 +207,7 @@ const  {
 
             black.value = cmykColor.k.toString();
         blackText.value = cmykColor.k.toString();
-        HandleUiUpdate(cmykColor,targetColorElements,cmykElements);
+        HandleUiUpdate(cmykColor,targetElements,cmykElements);
     
   }
   const handleColorCopy = async () => {
@@ -252,7 +252,7 @@ const  {
   const updateUI = debounce(() => {
 
     const colorUpdate : CMYK =  {c:  +cyan.value ,m : +magenta.value, y: +yellow.value, k : +black.value};
-        HandleUiUpdate(colorUpdate,targetColorElements,
+        HandleUiUpdate(colorUpdate,targetElements,
     cmykElements);
     
 }, 100);
@@ -261,6 +261,8 @@ const  {
 updateUI();
 
   const setExternalColor = (externalColor : CMYK) => {
+    console.log("We made it here")
+    console.log(externalColor)
     if(externalColor){
         cyan.value = externalColor.c.toString();
         cyanText.value = externalColor.c.toString();
@@ -273,18 +275,21 @@ updateUI();
 
             black.value = externalColor.k.toString();
         blackText.value = externalColor.k.toString();
-        HandleUiUpdate(externalColor,targetColorElements,cmykElements);
+        HandleUiUpdate(externalColor,targetElements,cmykElements);
     
     }}
 
 
 
+  if (colorPickerContainer) {
+    colorPickerContainer.appendChild(CmykElement); // Append to DOM
+  }
 
   
 
 return {
 
-    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(CmykElement) : CmykElement,
+    ColorPickerElement :CmykElement,
     setExternalColor
 
 }

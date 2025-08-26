@@ -55,7 +55,7 @@ const ProfileRgbElements =(RgbElement : HTMLDivElement) : RgbElements  =>{
 
 
   const handleTargetElementUpdate = (targetColorElement : targetElementPorps,rgbUpdate : RGB ) => {
-  // Normalize targetColorElements into a proper array of elements
+  // Normalize targetElements into a proper array of elements
   const elements = 
     targetColorElement.targetElement instanceof NodeList // Check if it's a NodeList
       ? Array.from(targetColorElement.targetElement)     // Convert NodeList to array
@@ -133,7 +133,7 @@ const HandleUiUpdate = (colorUpdate : RGB , targetColorElement : targetElementPo
 
 
 
-const RgbElementPPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<RGB> => {
+const RgbElementPICKER = ({colorPickerContainer,  targetElements} : PickerProps ) : ColorPickerExport<RGB> => {
 
 let RgbElement : HTMLDivElement = RgbHtmlContent
 RgbElement.appendChild(ExtraOptionsElements)
@@ -187,7 +187,7 @@ const  {
           blue.value = rgbColor.b.toString();
               blueText.value = rgbColor.b.toString();
 
-              HandleUiUpdate(rgbColor,targetColorElements,RgbElements);
+              HandleUiUpdate(rgbColor,targetElements,RgbElements);
     
   }
   const handleColorCopy = async () => {
@@ -231,7 +231,7 @@ const  {
   const updateUI = debounce(() => {
 
     const colorUpdate : RGB =  {r:  +red.value ,g: +green.value, b: +blue.value};
-        HandleUiUpdate(colorUpdate,targetColorElements,
+        HandleUiUpdate(colorUpdate,targetElements,
     RgbElements);
 }, 100);
 
@@ -249,18 +249,21 @@ updateUI();
           blue.value = externalColor.b.toString();
               blueText.value = externalColor.b.toString();
 
-              HandleUiUpdate(externalColor,targetColorElements,RgbElements);
+              HandleUiUpdate(externalColor,targetElements,RgbElements);
     
     }}
 
 
+  if (colorPickerContainer) {
+    colorPickerContainer.appendChild(RgbElement); // Append to DOM
+  }
 
 
   
 
 return {
 
-    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(RgbElement) : RgbElement,
+    ColorPickerElement :  RgbElement,
     setExternalColor
 
 }
@@ -268,4 +271,4 @@ return {
 
 }
 
-export default RgbElementPPICKER
+export default RgbElementPICKER

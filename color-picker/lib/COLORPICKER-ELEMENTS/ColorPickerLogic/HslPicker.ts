@@ -53,7 +53,7 @@ const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
 
 
   const handleTargetElementUpdate = (targetColorElement : targetElementPorps,hslUpdate : HSL ) => {
-  // Normalize targetColorElements into a proper array of elements
+  // Normalize targetElements into a proper array of elements
   const elements = 
     targetColorElement.targetElement instanceof NodeList // Check if it's a NodeList
       ? Array.from(targetColorElement.targetElement)     // Convert NodeList to array
@@ -117,7 +117,7 @@ const HandleUiUpdate = (colorUpdate : HSL , targetColorElement : targetElementPo
 
 
 
-const HSLELEMENTPPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<HSL> => {
+const HSLELEMENTPICKER = ({colorPickerContainer,  targetElements} : PickerProps ) : ColorPickerExport<HSL> => {
 
 const HslElement : HTMLDivElement = HslHtmlContent
 HslElement.appendChild(ExtraOptionsElements)
@@ -170,7 +170,7 @@ const  {
           lightness.value = hslColor.l.toString();
               lightnessText.value = hslColor.l.toString();
 
-              HandleUiUpdate(hslColor,targetColorElements,HslElements);
+              HandleUiUpdate(hslColor,targetElements,HslElements);
     
   }
 
@@ -215,7 +215,7 @@ const  {
   const updateUI = debounce(() => {
 
     const colorUpdate : HSL =  {h:  +hue.value ,s: +saturation.value, l: +lightness.value};
-        HandleUiUpdate(colorUpdate,targetColorElements,
+        HandleUiUpdate(colorUpdate,targetElements,
     HslElements);
 }, 100);
 
@@ -233,23 +233,24 @@ updateUI();
           lightness.value = externalColor.l.toString();
               lightnessText.value = externalColor.l.toString();
 
-              HandleUiUpdate(externalColor,targetColorElements,HslElements);
+              HandleUiUpdate(externalColor,targetElements,HslElements);
     
     }}
 
 
 
+  if (colorPickerContainer) {
+    colorPickerContainer.appendChild(HslElement); // Append to DOM
+  }
 
   
 
 return {
-
-    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(HslElement) : HslElement,
+    ColorPickerElement : HslElement,
     setExternalColor
-
 }
 
 
 }
 
-export default HSLELEMENTPPICKER
+export default HSLELEMENTPICKER
