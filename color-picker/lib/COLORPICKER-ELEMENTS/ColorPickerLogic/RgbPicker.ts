@@ -1,4 +1,4 @@
-import HslHtmlContent from "../HtmlGnenrators/HslHtmlContent"
+import RgbHtmlContent from "../HtmlGnenrators/RgbHtmlContent"
 import ExtraOptionsElements from "../HtmlGnenrators/ExtraOptionsElement"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
@@ -6,8 +6,8 @@ import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities
 import "../main.css"
 
 
-import type {HSL} from "../../../types/ColorTypes"
-import type {targetElementPorps ,PickerProps,HslElements, ColorPickerExport } from "../../../types/ColorPickerTypes"
+import type {RGB} from "../../../types/ColorTypes"
+import type {targetElementPorps ,PickerProps,RgbElements, ColorPickerExport } from "../../../types/ColorPickerTypes"
 
 
 
@@ -16,35 +16,36 @@ import type {targetElementPorps ,PickerProps,HslElements, ColorPickerExport } fr
 
 
 /* 
-Profile hsl Element
+Profile RGB Element
 
 */
 
-const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
+const ProfileRgbElements =(RgbElement : HTMLDivElement) : RgbElements  =>{
     
-  const hue = HslElement.querySelector<HTMLInputElement>("#hue")!;
-  const hueText = HslElement.querySelector<HTMLInputElement>("#hueText")!;
-  const saturation = HslElement.querySelector<HTMLInputElement>("#saturation")!;
-  const saturationText = HslElement.querySelector<HTMLInputElement>("#saturationText")!;
-  const lightness = HslElement.querySelector<HTMLInputElement>("#lightness")!;
-  const lightnessText = HslElement.querySelector<HTMLInputElement>("#lightnessText")!;
+    
+  const red = RgbElement.querySelector<HTMLInputElement>("#red")!;
+  const green = RgbElement.querySelector<HTMLInputElement>("#green")!;
+  const blue = RgbElement.querySelector<HTMLInputElement>("#blue")!;
+  const redText = RgbElement.querySelector<HTMLInputElement>("#redText")!;
+  const greenText = RgbElement.querySelector<HTMLInputElement>("#greenText")!;
+  const blueText = RgbElement.querySelector<HTMLInputElement>("#blueText")!;
   
-  const colorDisplay = HslElement.querySelector<HTMLDivElement>(".preview")!;
-  const eyeDropperButton = HslElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
-  const copyButton = HslElement.querySelector<HTMLDivElement>(".copyDiv")!;
+  const colorDisplay = RgbElement.querySelector<HTMLDivElement>(".preview")!;
+  const eyeDropperButton = RgbElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
+  const copyButton = RgbElement.querySelector<HTMLDivElement>(".copyDiv")!;
 
 
   return {
-    hue ,
-    saturation ,
-    lightness,
+    red ,
+    green ,
+    blue,
     
-    hueText,
-    saturationText,
-    lightnessText,
+    redText,
+    greenText,
+    blueText,
 
     colorDisplay,
-    HslElement,
+    RgbElement,
     eyeDropperButton,
     copyButton
 } 
@@ -53,7 +54,7 @@ const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
 
 
 
-  const handleTargetElementUpdate = (targetColorElement : targetElementPorps,hslUpdate : HSL ) => {
+  const handleTargetElementUpdate = (targetColorElement : targetElementPorps,rgbUpdate : RGB ) => {
   // Normalize targetColorElements into a proper array of elements
   const elements = 
     targetColorElement.targetElement instanceof NodeList // Check if it's a NodeList
@@ -64,9 +65,9 @@ const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
 
   // Loop over each element and apply styles
   elements.forEach(el => {
-    // Convert HSL to RGB
-    const rgb = ColorConverter.hslToRgb(hslUpdate);
-    const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    // Convert RGB to RGB
+    
+    const rgbStr = `rgb(${rgbUpdate.r}, ${rgbUpdate.g}, ${rgbUpdate.b})`;
 
     // Apply text color if element has "text" class, else apply background
     if (targetColorElement.targetStylePorperty === "text") {
@@ -78,38 +79,52 @@ const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
 };
 
 
-const HandleUiUpdate = (colorUpdate : HSL , targetColorElement : targetElementPorps , HslElements : HslElements  ) => {
+
+// 🔧 Helper: Generate slider gradient
+const createGradient = (channel: "red" | "green" | "blue", r: number, g: number, b: number): string => {
+  let gradient = "linear-gradient(to right, ";
+  for (let i = 0; i <= 255; i += 25) {
+    let color: string;
+    let rgb : RGB = {r, g, b};
+    switch (channel) {
+      case "red":
+        rgb = {r: i, g, b};
+        color = ColorConverter.rgbToHex(rgb);
+        break;
+      case "green":
+        rgb = {r, g: i, b};
+        color = ColorConverter.rgbToHex(rgb);
+        break;
+      case "blue":
+        rgb = {r, g, b: i};
+        color = ColorConverter.rgbToHex(rgb);
+        break;
+    }
+    gradient += `${color} ${(i / 225) * 100}%, `;
+  }
+  return gradient.slice(0, -2) + ")";
+};
+
+
+
+const HandleUiUpdate = (colorUpdate : RGB , targetColorElement : targetElementPorps , RgbElements : RgbElements  ) => {
    
     const colorNames = new NTC();
-    const {hue, saturation,lightness , colorDisplay , HslElement} = HslElements
-    const {h,s,l} = colorUpdate
-    
-    const hslColor = `hsl(${h}, ${s}%, ${l}%)`;
-    const hslToHex = ColorConverter.hslToHex(colorUpdate);
-    const name =  colorNames.getColorName(hslToHex);
-    // Update slider backgrounds dynamically
-    saturation.style.background = `linear-gradient(to right, 
-      hsl(${h}, 0%, ${l}%),
-      hsl(${h}, 100%, ${l}%))`;
+    const {red, green,blue , colorDisplay , RgbElement} = RgbElements
+    const {r,g,b} = colorUpdate
 
-    lightness.style.background = `linear-gradient(to right, 
-      hsl(${h}, ${s}%, 0%),
-      hsl(${h}, ${s}%, 50%))`;
-
-    // Update preview
-    colorDisplay.innerHTML = `<span style="background: white; color: #333; padding: 10px; border-radius: 15px;">${name}</span>`;
-    colorDisplay.style.background = hslColor;
-   
-
-    
-    
-    handleTargetElementUpdate(targetColorElement, colorUpdate);
-  
-    if (l > 80 || s > 80) {
-      HslElement.style.boxShadow = `0 0 .5rem black`;
-    } else {
-      HslElement.style.boxShadow = `0 0 .5rem ${hslColor}`;
-    }
+     const RGB = `rgb(${r},${g},${b})`;
+     const hex = ColorConverter.rgbToHex({r, g, b});
+     const colorName = colorNames.getColorName(hex);
+ 
+     colorDisplay.innerHTML = `<span style="background: white; color:hsl(0,0%,20%); padding:10px; border-radius:15px;">${colorName}</span>`;
+     colorDisplay.style.background = RGB;
+     RgbElement.style.boxShadow = `0 0 .5rem ${RGB}`;
+ 
+     red.style.background = createGradient("red", r, g, b);
+     green.style.background = createGradient("green", r, g, b);
+     blue.style.background = createGradient("blue", r, g, b);
+     handleTargetElementUpdate(targetColorElement, colorUpdate);
 }
 
 
@@ -118,32 +133,32 @@ const HandleUiUpdate = (colorUpdate : HSL , targetColorElement : targetElementPo
 
 
 
-const HSLELEMENTPPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<HSL> => {
+const RgbElementPPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<RGB> => {
 
-let HslElement : HTMLDivElement = HslHtmlContent
-HslElement.appendChild(ExtraOptionsElements)
+let RgbElement : HTMLDivElement = RgbHtmlContent
+RgbElement.appendChild(ExtraOptionsElements)
 
-const HslElements = ProfileHslElements(HslElement)
+const RgbElements = ProfileRgbElements(RgbElement)
 
 const  {
-    hue ,
-    saturation ,
-    lightness,
+    red ,
+    green ,
+    blue,
     
-    hueText,
-    saturationText,
-    lightnessText,  
+    redText,
+    greenText,
+    blueText,  
     eyeDropperButton,
     copyButton,
-} = HslElements
+} = RgbElements
 
     /**
    * Updates text fields when sliders move.
    */
   const syncSlidersToText = () => {
-    hueText.value = hue.value;
-    saturation.value = saturationText.value;
-    lightness.value = lightnessText.value;
+    redText.value = red.value;
+    greenText.value = green.value;
+    blueText.value = blue.value;
     updateUI();
   };
 
@@ -151,9 +166,9 @@ const  {
    * Updates sliders when text fields change.
    */
   const syncTextToSliders = () => {
-    hue.value = hueText.value;
-    saturation.value = saturationText.value;
-    lightness.value = lightnessText.value;
+    red.value = redText.value;
+    green.value = greenText.value;
+    blue.value = blueText.value;
     
     updateUI();
   };
@@ -161,24 +176,24 @@ const  {
   const handleEyeDropper = async () => {
     const color  = await pickColorWithEyeDropper()
     console.log(color);
-    const hslColor = ColorConverter.hexToHsl(color || "#000000") 
-    console.log(hslColor)
-     hue.value = hslColor.h.toString();
-        hueText.value = hslColor.h.toString();
+    const rgbColor = ColorConverter.hexToRgb(color || "#000000") 
+    console.log(rgbColor)
+     red.value = rgbColor.r.toString();
+        redText.value = rgbColor.r.toString();
 
-         saturation.value = hslColor.s.toString();
-        saturationText.value = hslColor.s.toString();
+         green.value = rgbColor.g.toString();
+        greenText.value = rgbColor.g.toString();
 
-          lightness.value = hslColor.l.toString();
-              lightnessText.value = hslColor.l.toString();
+          blue.value = rgbColor.b.toString();
+              blueText.value = rgbColor.b.toString();
 
-              HandleUiUpdate(hslColor,targetColorElements,HslElements);
+              HandleUiUpdate(rgbColor,targetColorElements,RgbElements);
     
   }
   const handleColorCopy = async () => {
  
     
-            const color = `hsl(${hueText.value}%, ${saturationText.value}%, ${lightnessText.value}%)`
+    const color = `rgb(${redText.value}, ${greenText.value}, ${blueText.value})`
         const isCopied =  await copyToClipboard(color)
 
         if(isCopied){
@@ -193,14 +208,14 @@ const  {
 
 
   // Event listeners
-  hue.addEventListener("input", syncSlidersToText);
-  saturation.addEventListener("input", syncSlidersToText);
-  lightness.addEventListener("input", syncSlidersToText);
+  red.addEventListener("input", syncSlidersToText);
+  green.addEventListener("input", syncSlidersToText);
+  blue.addEventListener("input", syncSlidersToText);
 
   
-  hueText.addEventListener("input", syncTextToSliders);
-  saturation.addEventListener("input", syncTextToSliders);
-  lightness.addEventListener("input", syncTextToSliders);
+  redText.addEventListener("input", syncTextToSliders);
+  green.addEventListener("input", syncTextToSliders);
+  blue.addEventListener("input", syncTextToSliders);
   
 
   eyeDropperButton.addEventListener("click", handleEyeDropper);
@@ -215,26 +230,26 @@ const  {
    */
   const updateUI = debounce(() => {
 
-    const colorUpdate : HSL =  {h:  +hue.value ,s: +saturation.value, l: +lightness.value};
+    const colorUpdate : RGB =  {r:  +red.value ,g: +green.value, b: +blue.value};
         HandleUiUpdate(colorUpdate,targetColorElements,
-    HslElements);
+    RgbElements);
 }, 100);
 
 
 updateUI();
 
-  const setExternalColor = (externalColor : HSL) => {
+  const setExternalColor = (externalColor : RGB) => {
     if(externalColor){
-        hue.value = externalColor.h.toString();
-        hueText.value = externalColor.h.toString();
+        red.value = externalColor.r.toString();
+        redText.value = externalColor.r.toString();
 
-         saturation.value = externalColor.s.toString();
-        saturationText.value = externalColor.s.toString();
+         green.value = externalColor.g.toString();
+        greenText.value = externalColor.g.toString();
 
-          lightness.value = externalColor.l.toString();
-              lightnessText.value = externalColor.l.toString();
+          blue.value = externalColor.b.toString();
+              blueText.value = externalColor.b.toString();
 
-              HandleUiUpdate(externalColor,targetColorElements,HslElements);
+              HandleUiUpdate(externalColor,targetColorElements,RgbElements);
     
     }}
 
@@ -245,7 +260,7 @@ updateUI();
 
 return {
 
-    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(HslElement) : HslElement,
+    ColorPickerElement :  colorPickerContainer !== undefined ? colorPickerContainer.appendChild(RgbElement) : RgbElement,
     setExternalColor
 
 }
@@ -253,4 +268,4 @@ return {
 
 }
 
-export default HSLELEMENTPPICKER
+export default RgbElementPPICKER

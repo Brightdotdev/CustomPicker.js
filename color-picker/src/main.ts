@@ -26,7 +26,7 @@ mainComponentElements.forEach((element) => {
 
 // import { ColorPickers } from "../lib/Color-picker-deep/COLORPICKER";
 
-import  HSLCOLORPICKERELEMENT  from "../lib/COLORPICKER-ELEMENTS/ColorPickerLogic/HslPicker";
+import  RGBCOLORPICKERELEMENT  from "../lib/COLORPICKER-ELEMENTS/ColorPickerLogic/RgbPicker";
 
 // 1. Get container and target elements
 
@@ -34,9 +34,9 @@ const pickerContainer = document.getElementById("color-picker-container")!;
 const primaryNodes = document.querySelectorAll<HTMLDivElement>(".color-preview")!
 
 // 2. Create a ColorPickers instance
-const initialColor = { h: 210, s: 100, l: 50 };
+const initialColor = { r: 255, g: 0, b: 0};
 
-HSLCOLORPICKERELEMENT({colorPickerContainer : pickerContainer,
+RGBCOLORPICKERELEMENT({colorPickerContainer : pickerContainer,
   targetColorElements : {  targetElement : primaryNodes, targetStylePorperty : "background"}}).setExternalColor(initialColor)
 
   
