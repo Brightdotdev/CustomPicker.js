@@ -43,6 +43,20 @@ export interface HslElements{
 } 
 
 
+export interface RgbElements{
+    red : HTMLInputElement;
+    green : HTMLInputElement;
+    blue: HTMLInputElement;
+    
+    redText: HTMLInputElement;
+    greenText: HTMLInputElement;
+    blueText: HTMLInputElement;
+    colorDisplay: HTMLDivElement;
+    eyeDropperButton: HTMLDivElement;
+    copyButton: HTMLDivElement;
+    RgbElement: HTMLDivElement;
+} 
+
 
 type anyColorType = CMYK | HSL | RGB
 

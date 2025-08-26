@@ -1,3 +1,4 @@
+import "../main.css"
 
      const HslHtmlContent = document.createElement('div');
      HslHtmlContent.id = 'hsl';

@@ -1,5 +1,5 @@
 
-import './style.css'
+// import './style.css'
 
 /* 
 import { ColorPicker } from "../lib/COLORPICKERELEMENT";
@@ -26,7 +26,7 @@ mainComponentElements.forEach((element) => {
 
 // import { ColorPickers } from "../lib/Color-picker-deep/COLORPICKER";
 
-import  CMYKELEMENTPICKER  from "../lib/COLORPICKER-ELEMENTS/ColorPickerLogic/CmykPicker";
+import  HSLCOLORPICKERELEMENT  from "../lib/COLORPICKER-ELEMENTS/ColorPickerLogic/HslPicker";
 
 // 1. Get container and target elements
 
@@ -34,9 +34,9 @@ const pickerContainer = document.getElementById("color-picker-container")!;
 const primaryNodes = document.querySelectorAll<HTMLDivElement>(".color-preview")!
 
 // 2. Create a ColorPickers instance
-const initialColor = {c :65, m :33, y :3, k :40};
+const initialColor = { h: 210, s: 100, l: 50 };
 
-CMYKELEMENTPICKER({colorPickerContainer : pickerContainer,
-  targetColorElements : {  targetElement : primaryNodes, targetStylePorperty : "text"}}).setExternalColor(initialColor)
+HSLCOLORPICKERELEMENT({colorPickerContainer : pickerContainer,
+  targetColorElements : {  targetElement : primaryNodes, targetStylePorperty : "background"}}).setExternalColor(initialColor)
 
   

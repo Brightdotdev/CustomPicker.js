@@ -3,7 +3,6 @@ import ExtraOptionsElements from "../HtmlGnenrators/ExtraOptionsElement"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
 import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
-import "../main.css"
 
 
 import type {HSL} from "../../../types/ColorTypes"
@@ -81,7 +80,7 @@ const ProfileHslElements =(HslElement : HTMLDivElement) : HslElements  =>{
 const HandleUiUpdate = (colorUpdate : HSL , targetColorElement : targetElementPorps , HslElements : HslElements  ) => {
    
     const colorNames = new NTC();
-    const {hue, saturation,lightness , colorDisplay , HslElement} = HslElements
+    const { saturation,lightness , colorDisplay , HslElement} = HslElements
     const {h,s,l} = colorUpdate
     
     const hslColor = `hsl(${h}, ${s}%, ${l}%)`;
@@ -120,7 +119,7 @@ const HandleUiUpdate = (colorUpdate : HSL , targetColorElement : targetElementPo
 
 const HSLELEMENTPPICKER = ({colorPickerContainer,  targetColorElements} : PickerProps ) : ColorPickerExport<HSL> => {
 
-let HslElement : HTMLDivElement = HslHtmlContent
+const HslElement : HTMLDivElement = HslHtmlContent
 HslElement.appendChild(ExtraOptionsElements)
 
 const HslElements = ProfileHslElements(HslElement)
@@ -142,8 +141,8 @@ const  {
    */
   const syncSlidersToText = () => {
     hueText.value = hue.value;
-    saturation.value = saturationText.value;
-    lightness.value = lightnessText.value;
+    saturationText.value = saturation.value;
+    lightnessText.value = lightness.value;
     updateUI();
   };
 
@@ -154,7 +153,6 @@ const  {
     hue.value = hueText.value;
     saturation.value = saturationText.value;
     lightness.value = lightnessText.value;
-    
     updateUI();
   };
 
@@ -175,8 +173,9 @@ const  {
               HandleUiUpdate(hslColor,targetColorElements,HslElements);
     
   }
+
+  
   const handleColorCopy = async () => {
- 
     
             const color = `hsl(${hueText.value}%, ${saturationText.value}%, ${lightnessText.value}%)`
         const isCopied =  await copyToClipboard(color)
