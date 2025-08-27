@@ -202,6 +202,8 @@ if (this.sections.classList.contains('active') && event.target !== this.activeSe
                         finalColor = ColorConverter.toRGB(color)
                         console.log("switching to rgb", finalColor)
                       }else{
+
+                        
                         finalColor = ColorConverter.toHSL(color);
                         console.log("switching to hsl", finalColor)
                       }
