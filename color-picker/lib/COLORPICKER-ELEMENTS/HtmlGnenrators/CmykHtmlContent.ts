@@ -1,10 +1,8 @@
 
-const CmykHtmlContent  = document.createElement('div');
-CmykHtmlContent.id = 'cmyk';
-CmykHtmlContent.classList.add("cmykPicker", "colorPickers");
-   
 
-CmykHtmlContent.innerHTML = `
+
+
+ const CmykContent = `
 
     <!-- color preview -->
      <div class="preview"> peview</div>
@@ -52,9 +50,7 @@ CmykHtmlContent.innerHTML = `
             </div> 
 
             <input type="range" class="slider sSlider" name="black" id="black" min="0" max="100" value="30" >    
-        </div>
-
-       
+        </div>       
 `
 
-export default CmykHtmlContent;
+export default CmykContent

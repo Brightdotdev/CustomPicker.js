@@ -1,18 +1,7 @@
-// src/colorUtils.ts
 
-// ----------------------
-// Interfaces & Types
-// ----------------------
 
-// ----------------------
-// External Conversion Functions
-// ----------------------
-// NOTE: These are assumed to be implemented elsewhere.
-// We'll type them so TypeScript knows their signatures.
+import type { RGB } from "../../types/ColorTypes.js";
 
-import type { AnyColor, CMYK, ColorValue, ContrastRatios, HSL, RGB } from "../../types/ColorTypes.js";
-
-import { ColorConverter } from "./ColorConverter.js";
 
 
 
@@ -23,6 +12,7 @@ import { ColorConverter } from "./ColorConverter.js";
 /**
  * Calculate luminance of an RGB color.
  */
+
 export const getLuminance = (rgb: RGB): number => {
   let { r, g, b } = rgb;
 
@@ -98,108 +88,8 @@ export const debounce = <T extends (...args: any[]) => void>(
   };
 };
 
-// ----------------------
-// Color Conversion Initializers
-// ----------------------
-
-/**
- * Normalize any color object to RGB.
- */
-export const colorsToRgb = (color: AnyColor): RGB => {
-  if ("r" in color && "g" in color && "b" in color) return color;
-  if ("h" in color && "s" in color && "l" in color)
-    return ColorConverter.hslToRgb(color as HSL);
-  return ColorConverter.cmykToRgb(color as CMYK);
-};
-
-/**
- * Normalize any color object to RGB for color change operations.
- */
-export const rgbColorChangeInit = (color: AnyColor): RGB => colorsToRgb(color);
-
-/**
- * Normalize any color object to CMYK.
- */
-export const cmykColorChangeInit = (color: AnyColor): CMYK => {
-  if ("c" in color && "m" in color && "y" in color && "k" in color)
-    return color;
-  if ("r" in color && "g" in color && "b" in color)
-    return ColorConverter.rgbToCmyk(color as RGB);
-  return ColorConverter.hslToCmyk(color as HSL);
-};
-
-/**
- * Normalize any color object to HSL.
- */
-export const hslColorChangeInit = (color: AnyColor): HSL => {
-  if ("h" in color && "s" in color && "l" in color) return color;
-  if ("r" in color && "g" in color && "b" in color)
-    return ColorConverter.rgbToHsl(color as RGB);
-  return ColorConverter.cmykToHsl(color as CMYK);
-};
-
-/**
- * Convert any color object to HSL explicitly.
- */
-export const colorsToHsl = (color: AnyColor): HSL => hslColorChangeInit(color);
-
-// ----------------------
-// Color Manager
-// ----------------------
 
 
-export const colorManagers = {
-  colorValues: [] as ColorValue[],
-  colorRatio: [] as ContrastRatios[],
-
-  /**
-   * Update a color value by picker ID.
-   */
-  updateColors(pickerId: string, value: RGB): void {
-    const existingIndex = this.colorValues.findIndex(
-      (picker) => picker.pickerId === pickerId
-    );
-
-    if (existingIndex !== -1) {
-      this.colorValues[existingIndex].value = value;
-    } else {
-      this.colorValues.push({ pickerId, value });
-    }
-
-    console.log(`Color values updated for picker ${pickerId}:`, value);
-    this.updateRatios();
-  },
-
-  /**
-   * Calculate and return contrast ratios between colors.
-   */
-  checkContrast(): ContrastRatios {
-    const defaultColor: RGB = { r: 0, g: 0, b: 0 };
-
-    const getColor = (id: string): RGB =>
-      this.colorValues.find((p) => p.pickerId === id)?.value || defaultColor;
-
-    const textColor = getColor("textPicker");
-    const bgColor = getColor("backgroundPicker");
-    const mainColor = getColor("mainPicker");
-    const accentColor = getColor("accentPicker");
-
-    const textBgRatio = getContrast(getContrastRatio(textColor, bgColor));
-    const textAccentRatio = getContrast(getContrastRatio(textColor, accentColor));
-    const textMainRatio = getContrast(getContrastRatio(textColor, mainColor));
-
-    return { textToBg: textBgRatio, textToAccent: textAccentRatio, textToMain: textMainRatio };
-  },
-
-  /**
-   * Update stored contrast ratios.
-   */
-  updateRatios(): void {
-    this.colorRatio = [];
-    this.colorRatio.push(this.checkContrast());
-    console.log("Updated Contrast Ratios:", this.colorRatio);
-  },
-};
 
 
 

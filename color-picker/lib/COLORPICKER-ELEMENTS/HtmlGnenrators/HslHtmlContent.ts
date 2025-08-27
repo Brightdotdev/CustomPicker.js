@@ -1,9 +1,5 @@
-import "../main.css"
 
-     const HslHtmlContent = document.createElement('div');
-     HslHtmlContent.id = 'hsl';
-     HslHtmlContent.classList.add("hslPicker", "colorPickers")
-     HslHtmlContent.innerHTML = 
+     const HslContent  = 
      `   
       <!-- color preview -->
         <div class="preview"> peview</div>
@@ -38,4 +34,4 @@ import "../main.css"
     `
 
 
-    export default HslHtmlContent
+    export default HslContent

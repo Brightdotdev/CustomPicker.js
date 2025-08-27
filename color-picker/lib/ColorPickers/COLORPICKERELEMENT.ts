@@ -1,8 +1,8 @@
-import { ColorConverter } from "./Utilities/ColorConverter";
-import { NTC } from "./Utilities/ColorName";
-import { CMYKPicker } from "./ColorPickers/CMYK";
-import { HsLPicker } from "./ColorPickers/HSL";
-import { RgbPicker } from "./ColorPickers/RGB";
+import { ColorConverter } from "../Utilities/ColorConverter";
+import { NTC } from "../Utilities/ColorName";
+import { CMYKPicker } from "./CMYK";
+import { HsLPicker } from "./HSL";
+import { RgbPicker } from "./RGB";
 
 type PickerType = "HSL" | "RGB" | "CMYK";
 
@@ -17,7 +17,7 @@ export class ColorPicker {
   private targetElements: HTMLElement[];
   private pickerId?: string;
   private contrastDiv?: HTMLElement[];
-  private activePicker: PickerType = "HSL";
+  private activePicker: PickerType = "RGB";
   private currentPicker!: HTMLDivElement;
   private selectedValues: any = {};
 

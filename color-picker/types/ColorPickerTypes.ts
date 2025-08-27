@@ -9,7 +9,7 @@ export type targetElementPorps = {
 
 export interface PickerProps {
     colorPickerContainer? : HTMLElement;
-    targetElements : targetElementPorps;
+    targetElementProps : targetElementPorps;
 } 
 
 export interface CmykElements{
@@ -62,7 +62,13 @@ export type anyColorType = CMYK | HSL | RGB
 
 
 
-export interface ColorPickerExport<T extends anyColorType> {
-    ColorPickerElement: HTMLDivElement | null,
-    setExternalColor: (externalColor: T) => void
+
+
+
+
+export interface ColorPickerObject<T extends anyColorType> {
+  getHtmlContent  : ()  =>  HTMLDivElement;
+  getCurrentColor : () =>   T ;
+  setExternalColor: (externalColor: T) => void
+
 }

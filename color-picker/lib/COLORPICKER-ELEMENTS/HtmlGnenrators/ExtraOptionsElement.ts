@@ -1,8 +1,7 @@
 
-const ExtraOptionsElements = document.createElement("div")
-ExtraOptionsElements.classList.add("extraOptions")
 
-ExtraOptionsElements.innerHTML = `
+
+const ExtraOptionsContent  =  `
  <!--  extra options element -->
          
         <div class="extraOptions">
@@ -11,9 +10,9 @@ ExtraOptionsElements.innerHTML = `
 
         <div class="sections">
             <ul class="options">
-            <li value="hsl" class="option optionText">HSL</li>
-            <li value="cmyk"class="option optionText">CMYK</li>
-            <li  value="rgb"class="option optionText">RGB</li>
+            <li value="HSL" class="option optionText">HSL</li>
+            <li value="CMYK"class="option optionText">CMYK</li>
+            <li  value="RGB"class="option optionText">RGB</li>
             </ul>
 
      <!-- active color selection element -->
@@ -47,4 +46,4 @@ class="ionicon" viewBox="0 0 512 512">
     </div>
 `
 
-export default ExtraOptionsElements
+export default ExtraOptionsContent

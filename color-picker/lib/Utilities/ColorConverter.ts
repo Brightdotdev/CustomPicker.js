@@ -140,32 +140,28 @@ export const ColorConverter = {
   cmykToHex(cmyk : CMYK): string {
 
     const { c, m, y, k } = cmyk;
-    const r = 255 * (1 - c) * (1 - k);
-    const g = 255 * (1 - m) * (1 - k);
-    const b = 255 * (1 - y) * (1 - cmyk.k);
+    const r = 255 * (1 - c / 100) * (1 - k/100);
+    const g = 255 * (1 - m/100) * (1 - k/100);
+    const b = 255 * (1 - y/100) * (1 - k/100);
 
     return `#${Math.round(r).toString(16).padStart(2, "0")}${Math.round(g)
       .toString(16)
       .padStart(2, "0")}${Math.round(b).toString(16).padStart(2, "0")}`;
   },
 
-  /**
-   * 🔹 Convert CMYK (0-100) to HEX
-   */
-  cmykToHexInit(cmyk : CMYK): string {
-    return this.cmykToHex({ c: cmyk.c / 100, m: cmyk.m / 100, y: cmyk.y / 100, k: cmyk.k / 100});
-  },
-
+  
   /**
    * 🔹 Convert CMYK to RGB
    */
   cmykToRgb(cmyk : CMYK): RGB {
-    const { c, m, y, k } = cmyk;
-    return {
-      r: Math.round(255 * (1 - c) * (1 - k)),
-      g: Math.round(255 * (1 - m) * (1 - k)),
-      b: Math.round(255 * (1 - y) * (1 - k)),
-    };
+
+    const {c,m,y,k} = cmyk
+
+  const r = Math.round(255 * (1 - c / 100) * (1 - k / 100));
+  const g = Math.round(255 * (1 - m / 100) * (1 - k / 100));
+  const b = Math.round(255 * (1 - y / 100) * (1 - k / 100));
+
+  return { r, g, b };
   },
 
   /**
@@ -180,63 +176,74 @@ export const ColorConverter = {
   /**
    * 🔹 Convert HSL to RGB
    */
+
+
+  
   hslToRgb(hsl : HSL): RGB {
-    let { h, s, l } = hsl;
-    h /= 360;
-    s /= 100;
-    l /= 100;
+    let {h,s,l} = hsl
 
-    let r: number, g: number, b: number;
+   s /= 100;
+  l /= 100;
 
-    if (s === 0) {
-      r = g = b = l;
-    } else {
-      const hue2rgb = (p: number, q: number, t: number): number => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
 
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
+  let r = 0, g = 0, b = 0;
 
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-    }
+  if (h >= 0 && h < 60) {
+      r = c; g = x; b = 0;
+  } else if (h >= 60 && h < 120) {
+      r = x; g = c; b = 0;
+  } else if (h >= 120 && h < 180) {
+      r = 0; g = c; b = x;
+  } else if (h >= 180 && h < 240) {
+      r = 0; g = x; b = c;
+  } else if (h >= 240 && h < 300) {
+      r = x; g = 0; b = c;
+  } else {
+      r = c; g = 0; b = x;
+  }
 
-    return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return { r, g, b };
   },
 
   /**
    * 🔹 Convert RGB to HSL
    */
+
+  
   rgbToHsl(rgb : RGB): HSL {
     let { r, g, b } = rgb;
-    r /= 255;
-    g /= 255;
-    b /= 255;
+   r /= 255;
+  g /= 255;
+  b /= 255;
 
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0, s = 0;
-    const l = (max + min) / 2;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
 
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h = 0, s = 0, l = (max + min) / 2;
+
+  if (delta !== 0) {
+      s = delta / (1 - Math.abs(2 * l - 1));
+
       switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
+          case r: h = ((g - b) / delta + (g < b ? 6 : 0)) * 60; break;
+          case g: h = ((b - r) / delta + 2) * 60; break;
+          case b: h = ((r - g) / delta + 4) * 60; break;
       }
-      h /= 6;
-    }
+  }
 
-    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  return {
+      h: Math.round(h),
+      s: Math.round(s * 100),
+      l: Math.round(l * 100)
+  };
   },
 
   
@@ -244,51 +251,8 @@ export const ColorConverter = {
   /* hsl to cmyk */
 
   hslToCmyk(hsl : HSL): CMYK {
-    const { h, s, l } = hsl;
-
-    // Step 1: Normalize inputs
-  const hue = h % 360; // Wrap hue within 0–359
-  const saturation = s / 100; // Convert % to [0,1]
-  const lightness = l / 100; // Convert % to [0,1]
-
-  // Step 2: Convert HSL to RGB
-  const c = (1 - Math.abs(2 * lightness - 1)) * saturation; // Chroma
-  const x = c * (1 - Math.abs(((hue / 60) % 2) - 1)); // Intermediate value
-  const m = lightness - c / 2;
-
-  let r = 0, g = 0, b = 0; // Temp RGB values in [0,1]
-
-  if (hue < 60) {
-    r = c; g = x; b = 0;
-  } else if (hue < 120) {
-    r = x; g = c; b = 0;
-  } else if (hue < 180) {
-    r = 0; g = c; b = x;
-  } else if (hue < 240) {
-    r = 0; g = x; b = c;
-  } else if (hue < 300) {
-    r = x; g = 0; b = c;
-  } else {
-    r = c; g = 0; b = x;
-  }
-
-  // Add match value to shift from [0,c] to [0,1]
-  r = r + m;
-  g = g + m;
-  b = b + m;
-
-  // Step 3: Convert RGB to CMYK
-  const k = 1 - Math.max(r, g, b);
-  const cyan = (1 - r - k) / (1 - k) || 0;
-  const magenta = (1 - g - k) / (1 - k) || 0;
-  const yellow = (1 - b - k) / (1 - k) || 0;
-
-  return {
-    c: parseFloat(cyan.toFixed(4)),
-    m: parseFloat(magenta.toFixed(4)),
-    y: parseFloat(yellow.toFixed(4)),
-    k: parseFloat(k.toFixed(4))
-  };
+    const rgb = this.hslToRgb(hsl); // Convert HSL to RGB
+    return this.rgbToCmyk(rgb);      // Convert RGB to CMYK
   }
   ,
 
@@ -296,6 +260,13 @@ export const ColorConverter = {
   /**
  * Convert RGB to CMYK
  */
+
+  /* 
+  
+  
+  
+  
+  */
   rgbToCmyk(rgb : RGB) : CMYK {
   const { r, g, b } = rgb;
     // Normalize RGB to 0–1
@@ -317,66 +288,18 @@ export const ColorConverter = {
   const y = (1 - bNorm - k) / (1 - k);
 
   return {
-    c: +(c * 100).toFixed(2),
-    m: +(m * 100).toFixed(2),
-    y: +(y * 100).toFixed(2),
-    k: +(k * 100).toFixed(2),
+    c: +(c * 100).toFixed(0),
+    m: +(m * 100).toFixed(0),
+    y: +(y * 100).toFixed(0),
+    k: +(k * 100).toFixed(0),
   };
 }
 
 ,
 
 cmykToHsl(cmyk : CMYK) : HSL {
-  const {c,m,y,k} = cmyk
-  // 1. Normalize CMYK values from percentages to 0–1 range
-  const C = c / 100;
-  const M = m / 100;
-  const Y = y / 100;
-  const K = k / 100;
-
-  // 2. Convert CMYK to RGB (0–1 range)
-  const r = 1 - Math.min(1, C * (1 - K) + K);
-  const g = 1 - Math.min(1, M * (1 - K) + K);
-  const b = 1 - Math.min(1, Y * (1 - K) + K);
-
-  // 3. Find min and max RGB values to calculate lightness and saturation
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const delta = max - min;
-
-  // 4. Calculate Lightness
-  const l = (max + min) / 2;
-
-  // 5. Calculate Saturation
-  let s = 0;
-  if (delta !== 0) {
-    s = delta / (1 - Math.abs(2 * l - 1));
-  }
-
-  // 6. Calculate Hue
-  let h = 0;
-  if (delta !== 0) {
-    switch (max) {
-      case r:
-        h = ((g - b) / delta) % 6;
-        break;
-      case g:
-        h = (b - r) / delta + 2;
-        break;
-      case b:
-        h = (r - g) / delta + 4;
-        break;
-    }
-    h *= 60;
-    if (h < 0) h += 360;
-  }
-
-  // 7. Convert s and l to percentage
-  return {
-    h: Math.round(h),
-    s: Math.round(s * 100),
-    l: Math.round(l * 100),
-  };
+  const rgb = ColorConverter.cmykToRgb(cmyk); // Convert CMYK to RGB
+  return ColorConverter.rgbToHsl(rgb); 
 }
 
 ,

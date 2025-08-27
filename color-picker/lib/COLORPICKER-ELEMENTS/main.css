@@ -1,39 +1,4 @@
-/* *{
-    box-sizing: border-box;
-    transition: .5s ease-in-out;
-    user-select: none;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
-}
-
-#testing{
-display: none;
-}
-body
-{
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    box-sizing: border-box;
-    flex-direction: column;
-}
-#testing{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    width: 100vw;
-}
-.mainWrapper{
-    width: 80vw;
-    gap: .5rem;
-    display: flex;
-    flex-wrap: wrap;
-} */
 .colorPickers
 {
     width: 16rem;
@@ -234,7 +199,7 @@ fill: rgb(36, 36, 36);
 {
     position: absolute;
     width: 8rem;
-    top: -9rem;
+    top: -7rem;
     border-radius: 5px;
     display: flex;
     flex-direction: column;

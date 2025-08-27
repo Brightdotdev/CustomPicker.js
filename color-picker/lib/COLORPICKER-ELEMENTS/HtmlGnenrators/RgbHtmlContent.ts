@@ -1,7 +1,5 @@
- const RgbHtmlContent = document.createElement('div');
-    RgbHtmlContent.id = 'rgb'; 
-    RgbHtmlContent.classList.add("rgbPicker", "colorPickers")
-    RgbHtmlContent.innerHTML = `        
+
+    const RgbContent  = `        
        <div class="preview">Preview</div>  
     <div class="sliderContainer">
        <div class="colorIdentifyer">
@@ -29,4 +27,4 @@
 
 
 
-    export default RgbHtmlContent
+    export default RgbContent
