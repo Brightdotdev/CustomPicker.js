@@ -69,6 +69,7 @@ export type anyColorType = CMYK | HSL | RGB
 export interface ColorPickerObject<T extends anyColorType> {
   getHtmlContent  : ()  =>  HTMLDivElement;
   getCurrentColor : () =>   T ;
-  setExternalColor: (externalColor: T) => void
+  setExternalColor: (externalColor: T) => void;
+  destroyPicker: () => void
 
 }

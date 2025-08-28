@@ -77,6 +77,31 @@ this.updateUI()
 
 
 
+public destroyPicker(){
+
+this. cyan.removeEventListener ("input", this.syncSlidersToText);
+this.magenta.removeEventListener ("input", this.syncSlidersToText);
+this.  yellow.removeEventListener("input",this. syncSlidersToText);
+this. black.removeEventListener("input", this.syncSlidersToText);
+
+this.cyanText.removeEventListener("input",this.syncTextToSliders);
+this.magentaText.removeEventListener ("input",this.syncTextToSliders);
+this.yellowText.removeEventListener("input",this.syncTextToSliders);
+this.blackText.removeEventListener ("input",this. syncTextToSliders);
+
+
+this.eyeDropperButton.removeEventListener("click", this.handleEyeDropper);
+this.copyButton.removeEventListener("click", this.handleColorCopy);
+this.activeSelection.innerText = "CMYK"
+
+    if (this.colorPickerContainer) {
+    this.colorPickerContainer.removeChild(this.CmykElement); // Append to DOM
+  }
+
+
+}
+
+
     public getHtmlContent ()  : HTMLDivElement{
       return this.CmykElement;
 }

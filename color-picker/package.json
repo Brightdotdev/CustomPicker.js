@@ -1,15 +1,35 @@
 {
-  "name": "color-picker",
+  "author": "Brightdotdev - Akinola Bright",
+  "name": "@brightdotdev/color-picker",
+  "description": "A Lightweight, framework-agnostic color picker library built with TypeScript",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "dist/color-picker.umd.js",
+  "module": "dist/color-picker.es.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
+  "files": [
+    "dist"
+  ],
+  "keywords": ["color-picker", "vanilla-js", "typescript", "framework-agnostic"],
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "typescript": "~5.8.3",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vite-plugin-dts": "^4.5.4"
+  },
+
+  "exports": {
+  ".": {
+    "import": "./dist/color-picker.es.js",
+    "require": "./dist/color-picker.umd.js",
+    "types": "./dist/index.d.ts"
   }
+}
+
 }

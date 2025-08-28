@@ -87,9 +87,7 @@ const thatPicker = new CmykObjct({colorPickerContainer : pickerContainer ,
       targetStylePorperty: "text"                     
     }})
 
-const COLORPICKERCLASSELEMENT = new COLORPICKERCLASS({colorPickerContainer : pickerContainer4 , 
-  pickerId : "stringgg", 
-
+new COLORPICKERCLASS({colorPickerContainer : pickerContainer4 , 
   colorPickerProps: {
     targetElementProps  : {
       targetElement : primaryNodes2,

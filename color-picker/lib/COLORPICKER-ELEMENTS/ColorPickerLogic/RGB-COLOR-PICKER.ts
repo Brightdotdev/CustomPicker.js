@@ -180,6 +180,26 @@ return  RgbHtmlContent
 
 
 
+public destroyPicker(){
+
+this. red.removeEventListener ("input", this.syncSlidersToText);
+this.green.removeEventListener ("input", this.syncSlidersToText);
+this.  blue.removeEventListener("input",this. syncSlidersToText);
+
+this.redText.removeEventListener("input",this.syncTextToSliders);
+this.greenText.removeEventListener ("input",this.syncTextToSliders);
+this.blueText.removeEventListener("input",this.syncTextToSliders);
+this.eyeDropperButton.removeEventListener("click", this.handleEyeDropper);
+this.copyButton.removeEventListener("click", this.handleColorCopy);
+
+    if (this.colorPickerContainer) {
+    this.colorPickerContainer.removeChild(this.RgbElement); // Append to DOM
+  }
+
+
+}
+
+
 
       private handleTargetElementUpdate({r,g,b}: RGB ){
     const elements = 

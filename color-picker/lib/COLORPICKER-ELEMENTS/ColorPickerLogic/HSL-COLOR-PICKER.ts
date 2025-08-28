@@ -94,7 +94,26 @@ HslHtmlContent.appendChild(ExtraOptionsElements)
 return HslHtmlContent
 }
 
+public destroyPicker(){
 
+this.hue.removeEventListener ("input", this.syncSlidersToText);
+this.saturation.removeEventListener ("input", this.syncSlidersToText);
+this.lightness.removeEventListener("input",this. syncSlidersToText);
+
+
+this.hueText.removeEventListener("input",this.syncTextToSliders);
+this.saturationText.removeEventListener ("input",this.syncTextToSliders);
+this.lightnessText.removeEventListener("input",this.syncTextToSliders);
+this.eyeDropperButton.removeEventListener("click", this.handleEyeDropper);
+this.copyButton.removeEventListener("click", this.handleColorCopy);
+
+
+    if (this.colorPickerContainer) {
+    this.colorPickerContainer.removeChild(this.HslElement); // Append to DOM
+  }
+
+
+}
 
     
     public setExternalColor (externalColor : AnyColor) {
