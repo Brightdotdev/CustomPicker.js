@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+brightdotdev-color-picker-1.0.0.tgz
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
