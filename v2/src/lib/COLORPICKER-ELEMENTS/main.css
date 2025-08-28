@@ -1,0 +1,222 @@
+
+.brightdotdev-colorPickers
+{
+    width: 16rem;
+    height: 24rem;
+    display: flex;
+    border-radius: .5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: .5rem;
+    box-shadow:  0  0 1rem black;
+    background: #f2f2f2;
+}
+
+.brightdotdev-cmykPicker{
+    width: 16rem;
+    height: 24rem;
+}
+.brightdotdev-preview
+{
+    
+    width: 100%;
+   height: 8rem;
+    border-radius: .5rem;
+    color: white;
+    align-content: center;
+    text-align: center;
+    box-shadow: 0 0 2px black;
+
+}
+
+.brightdotdev-sliderContainer
+{
+    position: relative;
+    width: 100%;
+   display: flex;
+   flex-direction: column;
+   gap: .5rem;
+}
+
+.brightdotdev-colorIdentifyer{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: hsl(0, 0%, 20%);
+    font-size: .8rem;
+   .text{
+    max-width: 2rem;
+    max-height: 2rem;
+    border-radius: .2rem;
+    border: 1.5px solid grey;
+    text-align: center;
+    font-weight: bolder;
+    background: none;
+   } 
+}
+
+.brightdotdev-slider
+{
+   flex: 1; 
+    width: 100%;
+    height: .6rem;
+    border-radius: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: none;
+}
+
+
+#brightdotdev-hue::-moz-range-track
+{
+    appearance: none;
+    height: .6rem;
+    border: none;
+    outline: none;
+    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+    border-radius: 1rem;
+} 
+#brightdotdev-hue::-webkit-slider-runnable-track
+{
+    appearance: none;
+    height: .6rem;
+    border: none;
+    outline: none;
+    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+    border-radius: 1rem;
+} 
+.brightdotdev-sSlider::-webkit-slider-runnable-track
+{
+    height: .6rem;
+    border-radius: 1rem;
+    
+}
+
+
+
+.brightdotdev-slider::-webkit-slider-thumb{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border: 4px solid white;
+    outline: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -4px;
+    background: none;
+
+}
+.brightdotdev-sSlider::-moz-range-thumb{
+    appearance: none;
+    -webkit-appearance: none;
+    width: .6rem;
+    height: .6rem;
+    border: 4px solid white;
+    outline: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -4px;
+    background: none;
+
+}
+
+.brightdotdev-slider::-webkit-slider-thumb:active,
+.brightdotdev-sSlider::-moz-range-thumb:active
+{
+    outline: .8px solid rgb(43, 43, 255);
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 6px solid white;
+
+}
+
+
+.brightdotdev-extraOptions
+{
+    z-index: 3;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    height: 1rem;
+}
+
+.brightdotdev-extraOptions svg,.brightdotdev-sections svg{
+width: 1rem;
+fill: rgb(36, 36, 36);
+}
+.copyDiv,.eyeDropperDiv{
+    cursor : pointer;
+    display: inline-flex;
+    border-radius: .2rem;
+    flex: 1;
+    padding: .2rem;
+    margin-left: .5rem;
+    border: 1px solid hsla(0, 0%, 20%, 0.322);
+}
+.brightdotdev-sections
+{
+    border-radius: .5rem;
+    align-items: center;
+    transition: 0.2s ease-in;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.brightdotdev-sections.brightdotdev-active .brightdotdev-options
+{
+    display: block;
+}
+
+.brightdotdev-activeSection
+{
+    display: inline-flex;
+    align-items: center;
+    border-radius: .2rem;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: .2rem;
+    border: 1px solid hsla(0, 0%, 20%, 0.322);
+
+   .chevron{
+        width: 1rem;
+    }
+}
+.brightdotdev-activeSection h3
+{
+    font-size: .8rem;
+    padding: 0;
+    margin: 0;
+}
+
+
+.brightdotdev-options
+{
+    position: absolute;
+    width: 8rem;
+    top: -7rem;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: .2rem;
+    background: white;
+    box-shadow: 0 0 .5rem black;
+    display: none;
+}
+.brightdotdev-option
+{
+padding: .2rem 0;
+text-align: center;
+list-style: none;
+border-bottom: 1px solid black;
+}
+
+
+.brightdotdev-option:nth-of-type(4){
+    border: none;
+}

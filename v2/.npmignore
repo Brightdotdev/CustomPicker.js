@@ -1,0 +1,32 @@
+# Development files
+examples/
+demo/
+docs/
+tests/
+*.config.js
+*.config.ts
+tsconfig.json
+vite.config.ts
+
+# Git files
+.gitignore
+.git/
+
+# OS files
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+vite.svg
+src/main.ts
+src/style.css
+src/counter.ts
+.vscode/
+.vscode/settings.json
+.idea/
+typescript.svg
+
+# Keep lib/ and types/ directories - they will be published
