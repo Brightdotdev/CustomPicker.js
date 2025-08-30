@@ -1,6 +1,7 @@
 
 
 import type { RGB } from "../../types/ColorTypes.js";
+import type { targetElementPorps } from "../../types/ColorPickerTypes.js";
 
 
 
@@ -150,5 +151,99 @@ export async function copyToClipboard(text: string): Promise<boolean> {
       console.error("Copy to clipboard failed:", err);
       return false;
     }
+  }
+}
+export const handleColorUpdate = (targetElementsProps: targetElementPorps, color: string): void => {
+  const { targetElement, targetStylePorperty } = targetElementsProps;
+  
+  // Handle multiple elements if it's an array
+  const elements = targetElement instanceof NodeList
+    ? Array.from(targetElement)
+    : Array.isArray(targetElement)
+      ? targetElement
+      : [targetElement];
+
+  elements.forEach(element => {
+    if (!element) return; // Safety check
+
+    switch (targetStylePorperty) {
+      // ✅ Simple direct styles
+      case "color":
+      case "background":
+      case "background-color":
+      case "border-color":
+      case "border-top-color":
+      case "border-right-color":
+      case "border-bottom-color":
+      case "border-bottom-color":
+      case "border-left-color":
+      case "outline-color":
+      case "caret-color":
+      case "accent-color":
+      case "text-decoration-color":
+      case "column-rule-color":
+        if (element instanceof HTMLElement) {
+          element.style.setProperty(targetStylePorperty, color, "important");
+        }
+        break;
+
+      // ✅ Shadows with configurable offsets
+      case "box-shadow":
+        if (element instanceof HTMLElement) {
+          element.style.setProperty("box-shadow", `0 4px 8px ${color}`, "important");
+        }
+        break;
+
+      case "text-shadow":
+        if (element instanceof HTMLElement) {
+          element.style.setProperty("text-shadow", `2px 2px 4px ${color}`, "important");
+        }
+        break;
+
+      // ✅ SVG-specific attributes
+      case "fill":
+      case "stroke":
+        if (element instanceof SVGElement) {
+          element.setAttribute(targetStylePorperty, color);
+        }
+        break;
+
+      // ✅ Scrollbar styling
+      case "scrollbar-color":
+        if (element instanceof HTMLElement) {
+          element.style.setProperty("scrollbar-color", `${color} transparent`, "important");
+        }
+        break;
+
+      // ✅ Selection highlight (global styles)
+      case "selection-bg":
+        injectSelectionRule("background", color);
+        break;
+
+      case "selection-text":
+        injectSelectionRule("color", color);
+        break;
+
+      default:
+        console.warn(`Unsupported color property: ${targetStylePorperty}`);
+    }
+  });
+};
+
+// Helper with better error handling
+function injectSelectionRule(type: "background" | "color", color: string): void {
+  try {
+    // Remove existing style if any
+    const existingStyle = document.getElementById('brightdotdev-selection-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const style = document.createElement("style");
+    style.id = 'brightdotdev-selection-style';
+    style.innerHTML = `::selection { ${type}: ${color} !important; }`;
+    document.head.appendChild(style);
+  } catch (error) {
+    console.error('Failed to inject selection style:', error);
   }
 }

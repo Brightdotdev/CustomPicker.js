@@ -2,7 +2,7 @@ import ExtraOptionsContent from "../ComponentGenerators/ExtraOptionsElement"
 import RgbContent from "../ComponentGenerators/RgbHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
-import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
+import {debounce, pickColorWithEyeDropper,copyToClipboard, handleColorUpdate} from "../../Utilities/MicroFunctionalities"
 
 import type {RGB , AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps,ColorPickerObject } from "../../../types/ColorPickerTypes"
@@ -252,22 +252,23 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
 
 
       private handleTargetElementUpdate({r,g,b}: RGB ){
-    const elements = 
-    this.targetElementProps.targetElement instanceof NodeList // Check if it's a NodeList
-      ? Array.from(this.targetElementProps.targetElement)     // Convert NodeList to array
-      : Array.isArray(this.targetElementProps.targetElement)  // If already an array, keep as is
-        ? this.targetElementProps.targetElement
-        : [this.targetElementProps.targetElement];            // Wrap single element into an array
 
-        elements.forEach(el => {
-    
-    const rgbStr = `rgb(${r}, ${g}, ${b})`;
+        
+  const rgbStr = `rgb(${r}, ${g}, ${b})`;
 
-    if (this.targetElementProps.targetStylePorperty === "text") {
-      el.style.setProperty("color", rgbStr, "important");
-    } else {
-      el.style.setProperty("background", rgbStr, "important");
-    }
+  // Normalize elements to array
+  const elements = this.targetElementProps.targetElement instanceof NodeList
+    ? Array.from(this.targetElementProps.targetElement)
+    : Array.isArray(this.targetElementProps.targetElement)
+      ? this.targetElementProps.targetElement
+      : [this.targetElementProps.targetElement];
+
+  // Apply color to each element
+  elements.forEach(element => {
+    handleColorUpdate({
+      targetElement: element,
+      targetStylePorperty: this.targetElementProps.targetStylePorperty
+    }, rgbStr);
   });
 }
 

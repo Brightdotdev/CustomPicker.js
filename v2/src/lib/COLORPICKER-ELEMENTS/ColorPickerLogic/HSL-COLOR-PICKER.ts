@@ -3,7 +3,7 @@ import CssElement from "../ComponentGenerators/ColorPickerCssGenerator"
 import HslContent from "../ComponentGenerators/HslHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
-import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
+import {debounce, pickColorWithEyeDropper,copyToClipboard, handleColorUpdate} from "../../Utilities/MicroFunctionalities"
 
 import type { HSL, AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps ,ColorPickerObject } from "../../../types/ColorPickerTypes"
@@ -248,25 +248,22 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
 
 
       private handleTargetElementUpdate({h,s,l}: HSL ){
-   const elements = 
-    this.targetElementProps.targetElement instanceof NodeList // Check if it's a NodeList
-      ? Array.from(this.targetElementProps.targetElement)     // Convert NodeList to array
-      : Array.isArray(this.targetElementProps.targetElement)  // If already an array, keep as is
-        ? this.targetElementProps.targetElement
-        : [this.targetElementProps.targetElement];            // Wrap single element into an array
+   const rgb = ColorConverter.hslToRgb({h, s, l});
+  const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
 
-  // Loop over each element and apply styles
-  elements.forEach(el => {
-    // Convert HSL to RGB
-    const rgb = ColorConverter.hslToRgb({h,s,l});
-    const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+  // Normalize elements to array
+  const elements = this.targetElementProps.targetElement instanceof NodeList
+    ? Array.from(this.targetElementProps.targetElement)
+    : Array.isArray(this.targetElementProps.targetElement)
+      ? this.targetElementProps.targetElement
+      : [this.targetElementProps.targetElement];
 
-    // Apply text color if element has "text" class, else apply background
-    if (this.targetElementProps.targetStylePorperty === "text") {
-      el.style.setProperty("color", rgbStr, "important");
-    } else {
-      el.style.setProperty("background", rgbStr, "important");
-    }
+  // Apply color to each element
+  elements.forEach(element => {
+    handleColorUpdate({
+      targetElement: element,
+      targetStylePorperty: this.targetElementProps.targetStylePorperty
+    }, rgbStr);
   });
 }
 

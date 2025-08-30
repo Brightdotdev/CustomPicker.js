@@ -2,7 +2,7 @@ import ExtraOptionsContent from "../ComponentGenerators/ExtraOptionsElement"
 import CmykContent from "../ComponentGenerators/CmykHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
-import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
+import {debounce, pickColorWithEyeDropper,copyToClipboard, handleColorUpdate} from "../../Utilities/MicroFunctionalities"
 
 import type {RGB ,CMYK, AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps, ColorPickerObject } from "../../../types/ColorPickerTypes"
@@ -289,25 +289,22 @@ return  CmykHtmlContent
 
 
       private handleTargetElementUpdate({c,m,y,k}: CMYK ){
-    const elements = 
-    this.targetElementProps.targetElement instanceof NodeList // Check if it's a NodeList
-      ? Array.from(this.targetElementProps.targetElement)     // Convert NodeList to array
-      : Array.isArray(this.targetElementProps.targetElement)  // If already an array, keep as is
-        ? this.targetElementProps.targetElement
-        : [this.targetElementProps.targetElement];            // Wrap single element into an array
-
-  // Loop over each element and apply styles
-  elements.forEach(el => {
-    // Convert CMYK to RGB
     const rgb = ColorConverter.cmykToRgb({c,m,y,k});
-    const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+  const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
 
-    // Apply text color if element has "text" class, else apply background
-    if (this.targetElementProps.targetStylePorperty === "text") {
-      el.style.setProperty("color", rgbStr, "important");
-    } else {
-      el.style.setProperty("background", rgbStr, "important");
-    }
+  // Normalize elements to array
+  const elements = this.targetElementProps.targetElement instanceof NodeList
+    ? Array.from(this.targetElementProps.targetElement)
+    : Array.isArray(this.targetElementProps.targetElement)
+      ? this.targetElementProps.targetElement
+      : [this.targetElementProps.targetElement];
+
+  // Apply color to each element
+  elements.forEach(element => {
+    handleColorUpdate({
+      targetElement: element,
+      targetStylePorperty: this.targetElementProps.targetStylePorperty
+    }, rgbStr);
   });
 }
 

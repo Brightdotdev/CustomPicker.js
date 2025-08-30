@@ -1,9 +1,37 @@
 
 import type {RGB, HSL ,CMYK} from "./ColorTypes"
 
+
+
+
+type colorAbleElement = 
+  | "color"                  // Text color
+  | "background"             // Background shorthand
+  | "background-color"       // Explicit background color
+  | "border-color"           // Border colors
+  | "border-top-color"
+  | "border-right-color"
+  | "border-bottom-color"
+  | "border-left-color"
+  | "outline-color"          // Outline/focus highlight
+  | "caret-color"            // Text cursor color
+  | "accent-color"           // Checkbox, radio, slider accent
+  | "text-decoration-color"  // Underlines/strikethroughs
+  | "column-rule-color"      // Multi-column rule
+  | "box-shadow"             // Shadows behind elements
+  | "text-shadow"            // Shadows behind text
+  | "fill"                   // SVG fill
+  | "stroke"                 // SVG stroke
+  | "scrollbar-color"        // Scrollbar customization
+  | "selection-bg"           // Selection highlight background
+  | "selection-text";        // Selection text color
+
+
+
 export type targetElementPorps = {
-    targetElement : HTMLElement[] | HTMLElement | NodeListOf<HTMLDivElement> ,
-    targetStylePorperty : "text" | "background"
+    targetElement : HTMLElement[] | HTMLElement | NodeListOf<HTMLDivElement> | SVGElement ,
+    targetStylePorperty : colorAbleElement
+    
 }
 
 

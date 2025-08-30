@@ -18,11 +18,11 @@ const colorValues3 = document.querySelector<HTMLDivElement>(".firstOne3")!
 
 const initialColorrgb = { r: 5, g: 9, b: 20};
 
-
+/* 
 const thatPicker = new CmykObject({colorPickerContainer : pickerContainer , 
     targetElementProps: {
       targetElement: primaryNodes, 
-      targetStylePorperty: "text"                     
+      targetStylePorperty: "color"                     
     }})
 
 
@@ -32,28 +32,28 @@ const thatPicker2 = new HslObject({colorPickerContainer : pickerContainer2 ,
   targetElementProps: {
       
       targetElement: primaryNodes, 
-      targetStylePorperty : "background"               
+      targetStylePorperty : "border-bottom-color"               
     }})
 
     const thatPicker3 = new RgbObject({colorPickerContainer : pickerContainer3 , 
     targetElementProps: {
       targetElement: primaryNodes2, 
-      targetStylePorperty: "background"                     
+      targetStylePorperty: "border-bottom-color"                     
     }})
-
+ */
     new COLORPICKERCLASS({colorPickerContainer : pickerContainer4 , 
   colorPickerProps: {
     targetElementProps  : {
       targetElement : primaryNodes2,
-      targetStylePorperty : "text"
+      targetStylePorperty : "selection-bg"
     }                    
     }})
-    thatPicker2.setExternalColor(initialColorrgb)
+    // thatPicker2.setExternalColor(initialColorrgb)
 
 
     getColorElements.addEventListener("click" , () =>{
 
-      colorValues.innerText = JSON.stringify( thatPicker.getCurrentColor())
-      colorValues2.innerText =  JSON.stringify(thatPicker2.getCurrentColor())
-      colorValues3.innerText =  JSON.stringify(thatPicker3.getCurrentColor())
+      // colorValues.innerText = JSON.stringify( thatPicker.getCurrentColor())
+      // colorValues2.innerText =  JSON.stringify(thatPicker2.getCurrentColor())
+      // colorValues3.innerText =  JSON.stringify(thatPicker3.getCurrentColor())
       })

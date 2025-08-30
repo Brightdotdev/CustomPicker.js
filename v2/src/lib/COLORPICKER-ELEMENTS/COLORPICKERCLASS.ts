@@ -32,7 +32,6 @@ class PickerFactory {
   }
 }
 
-// Type guard for PickerType
 function isPickerType(value: string): value is PickerType {
   return ["HSL", "RGB", "CMYK"].includes(value);
 }
