@@ -1,12 +1,12 @@
-import ExtraOptionsContent from "../HtmlGnenrators/ExtraOptionsElement"
-import CmykContent from "../HtmlGnenrators/CmykHtmlContent"
+import ExtraOptionsContent from "../ComponentGenerators/ExtraOptionsElement"
+import CmykContent from "../ComponentGenerators/CmykHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
 import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
-import "../main.css"
 
 import type {RGB ,CMYK, AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps, ColorPickerObject } from "../../../types/ColorPickerTypes"
+import CssElement from "../ComponentGenerators/ColorPickerCssGenerator"
 
 
 
@@ -30,13 +30,18 @@ export default class CmykObject  implements ColorPickerObject<CMYK> {
     private activeSelection! : HTMLElement;
     private copyButton! : HTMLDivElement;
     private  disbouceUpdateUi : () => void = debounce(this.updateUI,1000);
+
+
     
+    private static readonly STYLE_ID = 'brightdotdev-color-picker-styles';
+    private static stylesInjected = false;
+
         constructor({colorPickerContainer,  targetElementProps} : PickerProps ){
              
     
             this.colorPickerContainer = colorPickerContainer
             this.targetElementProps = targetElementProps
-         
+            this.injectStyles();
             this.profilePicker()
          
             this.loadPicker();
@@ -48,6 +53,43 @@ export default class CmykObject  implements ColorPickerObject<CMYK> {
 
 
 
+
+       private injectStyles(): void {
+        // Skip if styles already injected
+        if (CmykObject.stylesInjected) return;
+        
+        // Check if we're in a browser environment
+        if (typeof document === 'undefined') {
+            console.warn('Color Picker: Document not available (SSR environment)');
+            return;
+        }
+
+        try {
+            const style = document.createElement('style');
+            style.id = CmykObject.STYLE_ID;
+            style.textContent = this.initializeCss();
+
+            // Remove existing styles if any (cleanup)
+            const existing = document.getElementById(CmykObject.STYLE_ID);
+            if (existing) {
+                existing.remove();
+            }
+
+            // Inject into DOM
+            document.head.appendChild(style);
+            
+            // Mark as injected (static so all instances know)
+            CmykObject.stylesInjected = true;
+            
+        } catch (error) {
+            console.error('Failed to inject Color Picker styles:', error);
+        }
+    }
+
+private initializeCss() : string {
+  return CssElement
+}
+ 
 
 
 
@@ -92,7 +134,7 @@ this.blackText.removeEventListener ("input",this. syncTextToSliders);
 
 this.eyeDropperButton.removeEventListener("click", this.handleEyeDropper);
 this.copyButton.removeEventListener("click", this.handleColorCopy);
-this.activeSelection.innerText = "CMYK"
+
 
     if (this.colorPickerContainer) {
     this.colorPickerContainer.removeChild(this.CmykElement); // Append to DOM
@@ -113,8 +155,8 @@ const CmykHtmlContent  = document.createElement('div');
 const ExtraOptionsElements = document.createElement("div")
 CmykHtmlContent.id = 'cmyk';
 
-CmykHtmlContent.classList.add("cmykPicker", "colorPickers");
-ExtraOptionsElements.classList.add("extraOptions")
+CmykHtmlContent.classList.add("brightdotdev-colorPickers");
+ExtraOptionsElements.classList.add("brightdotdev-extraOptions")
 
 CmykHtmlContent.innerHTML = CmykContent
 ExtraOptionsElements.innerHTML = ExtraOptionsContent
@@ -139,7 +181,7 @@ return  CmykHtmlContent
 
     
     public setExternalColor (externalColor : AnyColor) :void {
-         console.log("We made it here", externalColor)
+      
          const convertedColor = ColorConverter.toCMYK(externalColor)
          const {c,m,y,k} = convertedColor
 
@@ -163,7 +205,7 @@ return  CmykHtmlContent
     private profilePicker =() : void =>{
 
       
-      this.activeSelection = this.CmykElement.querySelector<HTMLElement>('.activeSelection')!;
+      this.activeSelection = this.CmykElement.querySelector<HTMLElement>('.brightdotdev-activeSelection')!;
 
       this.cyan = this.CmykElement.querySelector<HTMLInputElement>("#cyan")!;
       this.cyanText = this.CmykElement.querySelector<HTMLInputElement>("#cyanText")!;
@@ -173,9 +215,9 @@ return  CmykHtmlContent
       this.yellowText = this.CmykElement.querySelector<HTMLInputElement>("#yellowText")!;
       this.black = this.CmykElement.querySelector<HTMLInputElement>("#black")!;
       this.blackText = this.CmykElement.querySelector<HTMLInputElement>("#blackText")!;
-      this.colorDisplay = this.CmykElement.querySelector<HTMLDivElement>(".preview")!;
-      this.eyeDropperButton = this.CmykElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
-      this.copyButton = this.CmykElement.querySelector<HTMLDivElement>(".copyDiv")!;}
+      this.colorDisplay = this.CmykElement.querySelector<HTMLDivElement>(".brightdotdev-preview")!;
+      this.eyeDropperButton = this.CmykElement.querySelector<HTMLDivElement>(".brightdotdev-eyeDropperDiv")!;
+      this.copyButton = this.CmykElement.querySelector<HTMLDivElement>(".brightdotdev-copyDiv")!;}
 
 
     
@@ -187,10 +229,10 @@ return  CmykHtmlContent
           
           const   { c, m, y, k } : CMYK = colorUpdate;
 
-          console.log("The cmyk we are generating the gradient for " ,{ c, m, y, k })
+          
           
           const hex = ColorConverter.cmykToHex(colorUpdate);
-          console.log("cmyk hex", hex)
+          
           const name = colorNames.getColorName(hex);
       
           // Update preview
@@ -287,13 +329,13 @@ return  CmykHtmlContent
 
 
   private handleEyeDropper = async () => {
-      console.log("We are doing this in cmyk")
+    
       const color  = await pickColorWithEyeDropper()
           if(color === null) return
     
           const {c,m,y,k} =  ColorConverter.hexToCmyk(color || "#000000")
-      console.log("color converted from the cymk stuff" , {c,m,y,k})
-        this.cyan.value = c.toString();
+    
+          this.cyan.value = c.toString();
           this.cyanText.value = c.toString();
   
           this.magenta.value = m.toString();
@@ -314,10 +356,9 @@ return  CmykHtmlContent
         const isCopied =  await copyToClipboard(color)
 
         if(isCopied){
-              console.log(color)
-            return console.log("Success")
-        }else{
-            console.log("omo")
+          return 
+        }else{ 
+         return alert("Unable to Coppy color code to clipboard")
         }
         
     

@@ -8,6 +8,7 @@
   "main": "./dist/color-picker.umd.js",
   "module": "./dist/color-picker.es.js",
   "types": "./dist/index.d.ts",
+  "style": "./dist/color-picker.css",
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm run types:check",

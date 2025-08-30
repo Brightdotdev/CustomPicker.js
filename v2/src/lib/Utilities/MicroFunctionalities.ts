@@ -114,7 +114,7 @@ export async function pickColorWithEyeDropper(): Promise<string | null> {
     const result: { sRGBHex: string } = await eyeDropper.open();
     return result.sRGBHex;
   } catch (error) {
-    console.error("EyeDropper cancelled or failed:", error);
+    alert("EyeDropper cancelled or failed");
     return null;
   }
 }

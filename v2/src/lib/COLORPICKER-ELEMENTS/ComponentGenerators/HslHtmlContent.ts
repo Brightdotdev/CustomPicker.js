@@ -1,0 +1,36 @@
+     const HslContent  = 
+     `   
+      <!-- color preview -->
+        <div class="brightdotdev-preview"> peview</div>
+     
+            <!-- Hue slider -->
+        <div class="brightdotdev-sliderContainer">
+            <div class="brightdotdev-colorIdentifyer">
+                <label  for="hue">HUE</label>
+            <input type="text" class="brightdotdev-text" name="hue" id="hueText"  min="0" max="360" value="20" > 
+            </div>
+          
+            <input type="range" class="brightdotdev-slider"  name="hue" id="brightdotdev-hue" min="0" max="360" value="20" >
+        </div>
+        
+            <!-- saturation slider -->
+        <div class="brightdotdev-sliderContainer">    
+        <div class="brightdotdev-colorIdentifyer">
+            <label  for="saturation">SATURATION</label>
+            <input type="text" class="brightdotdev-text" name="saturation" id="saturationText"  min="0" max="100" value="100" >
+        </div>
+            <input type="range" class="brightdotdev-slider brightdotdev-sSlider" name="saturation" id="saturation" min="0" max="100" value="100" >    
+        </div>
+
+            <!-- lightness slider -->
+        <div  class="brightdotdev-sliderContainer">
+            <div class="brightdotdev-colorIdentifyer">
+                <label  for="lightness">LIGHTNESS</label>
+                <input type="text" class="brightdotdev-text" name="lightness" id="lightnessText"  min="0" max="100" value="50">
+            </div>
+            <input type="range" class="brightdotdev-slider brightdotdev-sSlider" name="lightness" id="lightness" min="0" max="100" value="50" >
+        </div>
+    `
+
+
+    export default HslContent

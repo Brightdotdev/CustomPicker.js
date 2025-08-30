@@ -1,7 +1,6 @@
 import type { PickerProps } from "../../types/ColorPickerTypes"
 import type { AnyColor } from "../../types/ColorTypes"
 import { ColorConverter } from "../Utilities/ColorConverter"
-import "./main.css"
 import HslObject from "../COLORPICKER-ELEMENTS/ColorPickerLogic/HSL-COLOR-PICKER"
 import RgbObject from "../COLORPICKER-ELEMENTS/ColorPickerLogic/RGB-COLOR-PICKER"
 import CmykObject from "../COLORPICKER-ELEMENTS/ColorPickerLogic/CMYK-COLOR-PICKER"
@@ -104,10 +103,10 @@ export default class COLORPICKERCLASS {
       throw new Error("No color picker HTML content available");
     }
 
-    this.activeSelection = htmlContent.querySelector('.activeSelection')!;
-    this.sections = htmlContent.querySelector('.sections')!;
-    this.options = htmlContent.querySelectorAll('.option')!;
-    this.activeSection = htmlContent.querySelector('.activeSection')!;
+    this.activeSelection = htmlContent.querySelector('.brightdotdev-activeSelection')!;
+    this.sections = htmlContent.querySelector('.brightdotdev-sections')!;
+    this.options = htmlContent.querySelectorAll('.brightdotdev-option')!;
+    this.activeSection = htmlContent.querySelector('.brightdotdev-activeSection')!;
 
     // Validate that all required elements were found
     if (!this.activeSelection || !this.sections || !this.activeSection || this.options.length === 0) {
@@ -143,7 +142,7 @@ export default class COLORPICKERCLASS {
   }
 
   private addSectionClassName(event: MouseEvent): void {
-    this.sections.classList.add('active');
+    this.sections.classList.add('brightdotdev-active');
     event.stopPropagation();
   }
 

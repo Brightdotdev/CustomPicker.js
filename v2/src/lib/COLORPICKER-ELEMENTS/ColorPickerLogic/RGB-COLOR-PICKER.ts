@@ -1,12 +1,12 @@
-import ExtraOptionsContent from "../HtmlGnenrators/ExtraOptionsElement"
-import RgbContent from "../HtmlGnenrators/RgbHtmlContent"
+import ExtraOptionsContent from "../ComponentGenerators/ExtraOptionsElement"
+import RgbContent from "../ComponentGenerators/RgbHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
 import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
-import "../main.css"
 
 import type {RGB , AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps,ColorPickerObject } from "../../../types/ColorPickerTypes"
+import CssElement from "../ComponentGenerators/ColorPickerCssGenerator"
 
 
 export default class RgbObject implements ColorPickerObject<RGB>  {
@@ -23,6 +23,14 @@ export default class RgbObject implements ColorPickerObject<RGB>  {
     private colorDisplay! : HTMLDivElement;
     private activeSelection! : HTMLElement;
     private copyButton! : HTMLDivElement;
+
+
+    
+    private static readonly STYLE_ID = 'brightdotdev-color-picker-styles';
+    private static stylesInjected = false;
+
+
+
     private  disbouceUpdateUi : () => void = debounce(this.updateUI,1000);
     
         constructor({colorPickerContainer,  targetElementProps} : PickerProps ){
@@ -30,7 +38,8 @@ export default class RgbObject implements ColorPickerObject<RGB>  {
     
             this.colorPickerContainer = colorPickerContainer
             this.targetElementProps = targetElementProps
-         
+
+            this.injectStyles()
             this.ProfilePicker()
          
             this.loadPicker();
@@ -42,6 +51,43 @@ export default class RgbObject implements ColorPickerObject<RGB>  {
 
 
 
+       private injectStyles(): void {
+        // Skip if styles already injected
+        if (RgbObject.stylesInjected) return;
+        
+        // Check if we're in a browser environment
+        if (typeof document === 'undefined') {
+            console.warn('Color Picker: Document not available (SSR environment)');
+            return;
+        }
+
+        try {
+            const style = document.createElement('style');
+            style.id = RgbObject.STYLE_ID;
+            style.textContent = this.initializeCss();
+
+            // Remove existing styles if any (cleanup)
+            const existing = document.getElementById(RgbObject.STYLE_ID);
+            if (existing) {
+                existing.remove();
+            }
+
+            // Inject into DOM
+            document.head.appendChild(style);
+            
+            // Mark as injected (static so all instances know)
+            RgbObject.stylesInjected = true;
+            
+            
+        } catch (error) {
+            console.error('Failed to inject Color Picker styles:', error);
+        }
+    }
+
+private initializeCss() : string {
+  return CssElement
+}
+ 
 
 
 
@@ -80,9 +126,9 @@ this.updateUI()
 const RgbHtmlContent = document.createElement('div');
 const ExtraOptionsElements = document.createElement("div")
     RgbHtmlContent.id = 'rgb'; 
-    RgbHtmlContent.classList.add("rgbPicker", "colorPickers")
-RgbHtmlContent.classList.add("RGBPicker", "colorPickers");
-ExtraOptionsElements.classList.add("extraOptions")
+    RgbHtmlContent.classList.add("brightdotdev-colorPickers")
+    
+ExtraOptionsElements.classList.add("brightdotdev-extraOptions")
 
 RgbHtmlContent.innerHTML = RgbContent
 ExtraOptionsElements.innerHTML = ExtraOptionsContent
@@ -94,7 +140,7 @@ return  RgbHtmlContent
 
     
     public setExternalColor (externalColor : AnyColor) {
-         console.log("We made it here", externalColor)
+      
          const convertedColor = ColorConverter.toRGB(externalColor)
          const {r,g,b} = convertedColor
 
@@ -114,17 +160,21 @@ return  RgbHtmlContent
     private ProfilePicker =() : void =>{
 
       
-      this.activeSelection = this.RgbElement.querySelector<HTMLElement>('.activeSelection')!;
-
+      
       this.red = this.RgbElement.querySelector<HTMLInputElement>("#red")!;
       this.redText = this.RgbElement.querySelector<HTMLInputElement>("#redText")!;
       this.green = this.RgbElement.querySelector<HTMLInputElement>("#green")!;
       this.greenText = this.RgbElement.querySelector<HTMLInputElement>("#greenText")!;
       this.blue = this.RgbElement.querySelector<HTMLInputElement>("#blue")!;
       this.blueText = this.RgbElement.querySelector<HTMLInputElement>("#blueText")!;
-      this.colorDisplay = this.RgbElement.querySelector<HTMLDivElement>(".preview")!;
-      this.eyeDropperButton = this.RgbElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
-      this.copyButton = this.RgbElement.querySelector<HTMLDivElement>(".copyDiv")!;}
+
+      
+      this.colorDisplay = this.RgbElement.querySelector<HTMLDivElement>(".brightdotdev-preview")!;
+      this.eyeDropperButton = this.RgbElement.querySelector<HTMLDivElement>(".brightdotdev-eyeDropperDiv")!;
+      this.copyButton = this.RgbElement.querySelector<HTMLDivElement>(".brightdotdev-copyDiv")!;
+      this.activeSelection = this.RgbElement.querySelector<HTMLElement>('.brightdotdev-activeSelection')!;
+      
+    }
 
 
     
@@ -242,13 +292,13 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
 
 
   private handleEyeDropper = async () => {
-      console.log("We are doing this in RGB")
+    
       const color  = await pickColorWithEyeDropper()
           if(color === null) return
     
           const {r,g,b} =  ColorConverter.hexToRgb(color || "#000000")
-      console.log("color converted from the cymk stuff" , {r,g,b})
-        this.red.value = r.toString();
+    
+          this.red.value = r.toString();
           this.redText.value = r.toString();
   
           this.green.value = g.toString();
@@ -266,10 +316,10 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
         const isCopied =  await copyToClipboard(color)
 
         if(isCopied){
-           console.log(color)
-            return console.log("Success")
+        return
         }else{
-            console.log("omo")
+         return alert("Unable to Coppy color code to clipboard")
+
         }
         
   }

@@ -12,31 +12,23 @@ export default defineConfig({
     rollupOptions: {
       external: [],
       output: {
-        globals: {}
+        globals: {},
+        // This bundles CSS into JS
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.names?.some(n => n.endsWith('.css'))) {
+            return 'color-picker.css';
+          }
+          return assetInfo.names && assetInfo.names.length > 0 ? assetInfo.names[0] : 'asset';
+        }
       }
-    }
+    },
+    // Emit CSS as a separate file
+    cssCodeSplit: true,
   },
   plugins: [
     dts({
       insertTypesEntry: true,
       include: ['src/**/*', 'lib/**/*', 'types/**/*'],
-      exclude: ['**/*.test.ts', '**/*.spec.ts'],
-      outDir: 'dist',
-      // This ensures proper declaration generation
-      compilerOptions: {
-        baseUrl: '.',
-        paths: {
-          "./lib/*": ["./lib/*"],
-          "./types/*": ["./types/*"]
-        }
-      }
     })
-  ],
-  resolve: {
-    alias: {
-      // Add aliases to help with resolution
-      '@lib': resolve(__dirname, 'lib'),
-      '@types': resolve(__dirname, 'types')
-    }
-  }
+  ]
 });

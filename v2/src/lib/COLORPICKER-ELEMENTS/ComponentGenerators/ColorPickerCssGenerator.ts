@@ -1,3 +1,4 @@
+const CssElement = `
 
 .brightdotdev-colorPickers
 {
@@ -216,9 +217,10 @@ list-style: none;
 border-bottom: 1px solid black;
 }
 
-
 .brightdotdev-option:nth-of-type(4){
-    
 border-bottom:none;
-
 }
+`
+
+
+export default CssElement

@@ -1,9 +1,9 @@
-import ExtraOptionsContent from "../HtmlGnenrators/ExtraOptionsElement"
-import HslContent from "../HtmlGnenrators/HslHtmlContent"
+import ExtraOptionsContent from "../ComponentGenerators/ExtraOptionsElement"
+import CssElement from "../ComponentGenerators/ColorPickerCssGenerator"
+import HslContent from "../ComponentGenerators/HslHtmlContent"
 import {NTC} from "../../Utilities/ColorName"
 import {ColorConverter} from "../../Utilities/ColorConverter"
 import {debounce, pickColorWithEyeDropper,copyToClipboard} from "../../Utilities/MicroFunctionalities"
-import "../main.css"
 
 import type { HSL, AnyColor} from "../../../types/ColorTypes"
 import type {targetElementPorps ,PickerProps ,ColorPickerObject } from "../../../types/ColorPickerTypes"
@@ -26,9 +26,15 @@ export default class HslObject  implements ColorPickerObject<HSL> {
     private copyButton! : HTMLDivElement;
     private  disbouceUpdateUi : () => void = debounce(this.updateUI,1000);
     
+
+
+    private static readonly STYLE_ID = 'brightdotdev-color-picker-styles';
+    private static stylesInjected = false;
+
+
         constructor({colorPickerContainer,  targetElementProps} : PickerProps ){
              
-            
+            this.injectStyles()
             this.colorPickerContainer = colorPickerContainer
             this.targetElementProps = targetElementProps
             
@@ -44,6 +50,44 @@ export default class HslObject  implements ColorPickerObject<HSL> {
 
 
 
+
+           private injectStyles(): void {
+        // Skip if styles already injected
+        if (HslObject.stylesInjected) return;
+        
+        // Check if we're in a browser environment
+        if (typeof document === 'undefined') {
+            console.warn('Color Picker: Document not available (SSR environment)');
+            return;
+        }
+
+        try {
+            const style = document.createElement('style');
+            style.id = HslObject.STYLE_ID;
+            style.textContent = this.initializeCss();
+
+            // Remove existing styles if any (cleanup)
+            const existing = document.getElementById(HslObject.STYLE_ID);
+            if (existing) {
+                existing.remove();
+            }
+
+            // Inject into DOM
+            document.head.appendChild(style);
+            
+            // Mark as injected (static so all instances know)
+            HslObject.stylesInjected = true;
+            
+            
+        } catch (error) {
+            console.error('Failed to inject Color Picker styles:', error);
+        }
+    }
+
+private initializeCss() : string {
+  return CssElement
+}
+ 
 
 
 private loadPicker(){
@@ -75,17 +119,12 @@ this.updateUI()
       return  this.HslElement}
 
 
-
-
     private initializeContent ()  : HTMLDivElement{
      const HslHtmlContent = document.createElement('div');
      const ExtraOptionsElements = document.createElement("div")
      HslHtmlContent.id = 'hsl';
-     HslHtmlContent.classList.add("hslPicker", "colorPickers")
-    HslHtmlContent.classList.add("cmykPicker", "colorPickers");
-
-
-ExtraOptionsElements.classList.add("extraOptions")
+     HslHtmlContent.classList.add("brightdotdev-colorPickers")
+ExtraOptionsElements.classList.add("brightdotdev-extraOptions")
 
 HslHtmlContent.innerHTML = HslContent
 ExtraOptionsElements.innerHTML = ExtraOptionsContent
@@ -93,6 +132,7 @@ ExtraOptionsElements.innerHTML = ExtraOptionsContent
 HslHtmlContent.appendChild(ExtraOptionsElements)
 return HslHtmlContent
 }
+
 
 public destroyPicker(){
 
@@ -117,7 +157,7 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
 
     
     public setExternalColor (externalColor : AnyColor) {
-         console.log("We made it here", externalColor)
+      
          const convertedColor = ColorConverter.toHSL(externalColor)
          const {h,s,l} = convertedColor
 
@@ -139,17 +179,22 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
     }
 
     private ProfilePicker =() : void =>{
-      this.activeSelection = this.HslElement.querySelector<HTMLElement>('.activeSelection')!;
-        
-      this.hue = this.HslElement.querySelector<HTMLInputElement>("#hue")!;
+      
+      this.hue = this.HslElement.querySelector<HTMLInputElement>("#brightdotdev-hue")!;
       this.hueText = this.HslElement.querySelector<HTMLInputElement>("#hueText")!;
       this.saturation = this.HslElement.querySelector<HTMLInputElement>("#saturation")!;
       this.saturationText = this.HslElement.querySelector<HTMLInputElement>("#saturationText")!;
       this.lightness = this.HslElement.querySelector<HTMLInputElement>("#lightness")!;
       this.lightnessText = this.HslElement.querySelector<HTMLInputElement>("#lightnessText")!;
-        this.colorDisplay = this.HslElement.querySelector<HTMLDivElement>(".preview")!;
-      this.eyeDropperButton = this.HslElement.querySelector<HTMLDivElement>(".eyeDropperDiv")!;
-      this.copyButton = this.HslElement.querySelector<HTMLDivElement>(".copyDiv")!;}
+    
+
+        this.colorDisplay = this.HslElement.querySelector<HTMLDivElement>(".brightdotdev-preview")!;
+      this.eyeDropperButton = this.HslElement.querySelector<HTMLDivElement>(".brightdotdev-eyeDropperDiv")!;
+      this.copyButton = this.HslElement.querySelector<HTMLDivElement>(".brightdotdev-copyDiv")!;
+      this.activeSelection = this.HslElement.querySelector<HTMLElement>('.brightdotdev-activeSelection')!;
+    
+
+    }
 
 
     
@@ -241,13 +286,13 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
 
 
   private handleEyeDropper = async () => {
-      console.log("We are doing this in hsl")
+    
       const color  = await pickColorWithEyeDropper()
           if(color === null) return
     
           const {h,s,l} =  ColorConverter.hexToHsl(color || "#000000")
-      console.log("color converted from the cymk stuff" , {h,s,l})
-        this.hue.value = h.toString();
+    
+          this.hue.value = h.toString();
           this.hueText.value = h.toString();
   
           this.saturation.value = s.toString();
@@ -265,14 +310,12 @@ this.copyButton.removeEventListener("click", this.handleColorCopy);
         const isCopied =  await copyToClipboard(color)
 
         if(isCopied){
-           console.log(color)
-            return console.log("Success")
+          return
         }else{
-            console.log("omo")
-        }
-        
-    
-    
+      
+      return alert("Unable to Coppy color code to clipboard")
+    }
+      
   }
 
 
