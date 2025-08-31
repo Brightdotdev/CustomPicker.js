@@ -1,7 +1,4 @@
-Absolutely! Here's the enhanced README with a welcoming contributions and feedback section:
-
-```markdown
-# @brightdotdev/color-picker 🎨
+# @brightdotdev/color-picker - CustomPickers.js
 
 A lightweight, framework-agnostic color picker library built with TypeScript. Supports HSL, RGB, and CMYK color spaces with automatic CSS injection and 20+ CSS property targeting.
 
