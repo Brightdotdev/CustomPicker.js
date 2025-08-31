@@ -10,6 +10,5 @@ export default defineConfig({
     build: {
     outDir: 'build',  // Changed from 'dist' to 'build'
     sourcemap: false
-  },
-  base : "/CustomPicker.js"
+  }
 })
