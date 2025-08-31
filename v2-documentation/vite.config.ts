@@ -7,5 +7,9 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
+    build: {
+    outDir: 'build',  // Changed from 'dist' to 'build'
+    sourcemap: false
+  },
   base : "/CustomPicker.js"
 })
