@@ -18,7 +18,7 @@ const colorValues3 = document.querySelector<HTMLDivElement>(".firstOne3")!
 
 const initialColorrgb = { r: 5, g: 9, b: 20};
 
-/* 
+
 const thatPicker = new CmykObject({colorPickerContainer : pickerContainer , 
     targetElementProps: {
       targetElement: primaryNodes, 
@@ -40,7 +40,7 @@ const thatPicker2 = new HslObject({colorPickerContainer : pickerContainer2 ,
       targetElement: primaryNodes2, 
       targetStylePorperty: "border-bottom-color"                     
     }})
- */
+
     new COLORPICKERCLASS({colorPickerContainer : pickerContainer4 , 
   colorPickerProps: {
     targetElementProps  : {
@@ -53,7 +53,7 @@ const thatPicker2 = new HslObject({colorPickerContainer : pickerContainer2 ,
 
     getColorElements.addEventListener("click" , () =>{
 
-      // colorValues.innerText = JSON.stringify( thatPicker.getCurrentColor())
-      // colorValues2.innerText =  JSON.stringify(thatPicker2.getCurrentColor())
-      // colorValues3.innerText =  JSON.stringify(thatPicker3.getCurrentColor())
+      colorValues.innerText = JSON.stringify( thatPicker.getCurrentColor())
+      colorValues2.innerText =  JSON.stringify(thatPicker2.getCurrentColor())
+      colorValues3.innerText =  JSON.stringify(thatPicker3.getCurrentColor())
       })
