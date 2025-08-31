@@ -18,7 +18,7 @@ Check out the live demo to see all features in action:
 
 ## ✨ Features
 
-- 🎯 **Multiple Color Spaces**: HSL, RGB, and CMYK support with real-time conversion
+- 🎯 **Multiple Color Spaces** : HSL, RGB, and CMYK support with real-time conversion
 - ⚡ **Automatic Styling**: No CSS imports needed - styles inject automatically
 - 🔧 **Framework Agnostic**: Works with React, Vue, Angular, or vanilla JavaScript
 - 🎨 **20+ CSS Properties**: Target text, backgrounds, borders, shadows, SVG, and more
@@ -261,5 +261,5 @@ MIT License - see LICENSE file for details. This means you can use, modify, and 
 
 ---
 
-*This project is maintained with by [Brightdotdev |  Bright ](https://github.com/brightdotdev) (for now)
+ This project is maintained with by [Brightdotdev |  Bright ](https://github.com/brightdotdev) (for now)
 
