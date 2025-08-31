@@ -545,9 +545,9 @@ const currentColor = cmykPicker.getCurrentColor();
               <span>npm</span>
             </a>
           </div>
-          <p className="text-gray-500 text-sm">
-            Built with ❤️ by Brightdotdev
-          </p>
+            <p className="text-gray-500 text-sm">
+            Built by <a href="https://github.com/Brightdotdev" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brightdotdev</a> 
+            </p>
         </footer>
       </div>
     </div>
