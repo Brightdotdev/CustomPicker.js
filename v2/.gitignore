@@ -17,6 +17,7 @@ brightdotdev-color-picker-1.0.0.tgz
 !.vscode/extensions.json
 .idea
 .DS_Store
+brightdotdev-color-picker-1.0.0.tgz
 *.suo
 *.ntvs*
 *.njsproj

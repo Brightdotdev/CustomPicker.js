@@ -1,5 +1,5 @@
 {
-  "author": "Brightdotdev - Akinola Bright",
+  "author": "Brightdotdev - Akinola Bright | mail.bright.dev@gmail.com ",
   "name": "@brightdotdev/color-picker",
   "description": "A Lightweight, framework-agnostic color picker library built with TypeScript",
   "private": false,
@@ -21,12 +21,26 @@
     "lib",
     "types"
   ],
-  "keywords": [
+   "keywords": [
     "color-picker",
-    "vanilla-js",
+    "color",
+    "picker",
+    "hsl",
+    "rgb",
+    "cmyk",
     "typescript",
-    "framework-agnostic"
+    "vanilla-js"
   ],
+
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brightdotdev/CustomPicker.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Brightdotdev/CustomPicker.js/issues"
+    },
+  "homepage": "https://github.com/Brightdotdev/CustomPicker.js#readme",
   "devDependencies": {
     "@types/node": "^24.3.0",
     "typescript": "~5.8.3",

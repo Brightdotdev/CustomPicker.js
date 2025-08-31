@@ -175,7 +175,6 @@ export const handleColorUpdate = (targetElementsProps: targetElementPorps, color
       case "border-top-color":
       case "border-right-color":
       case "border-bottom-color":
-      case "border-bottom-color":
       case "border-left-color":
       case "outline-color":
       case "caret-color":
