@@ -254,7 +254,7 @@ MIT License - see LICENSE file for details. This means you can use, modify, and 
 
 **📦 npm Package**: [`@brightdotdev/color-picker`](https://www.npmjs.com/package/@brightdotdev/color-picker)
 
-**🌐 Live Demo**: [Check out the demo](https://your-demo-url-here.com) to see all features in action!
+**🌐 Live Demo**: [Check out the demo](https://custom-picker-js.pages.dev/) to see all features in action!
 
 ---
 

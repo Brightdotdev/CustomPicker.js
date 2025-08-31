@@ -3,7 +3,7 @@
   "name": "@brightdotdev/color-picker",
   "description": "A Lightweight, framework-agnostic color picker library built with TypeScript",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/color-picker.umd.js",
   "module": "./dist/color-picker.es.js",
