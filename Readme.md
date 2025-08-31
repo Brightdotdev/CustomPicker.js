@@ -238,7 +238,7 @@ We follow a **friendly, inclusive, and welcoming** environment. Please:
 ### 📬 Get in Touch
 - 💬 [GitHub Discussions](https://github.com/Brightdotdev/CustomPicker.js/discussions) - For ideas and questions
 - 🐛 [GitHub Issues](https://github.com/Brightdotdev/CustomPicker.js/issues) - For bugs and problems
-- 📧 Email: [your-email@example.com] - For private discussions
+- 📧 Email: [mail.bright.dev@gmail.com] - For private discussions
 
 
 ## 📝 License
