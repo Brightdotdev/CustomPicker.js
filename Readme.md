@@ -11,7 +11,7 @@ npm install @brightdotdev/color-picker
 ## 🚀 Live Demo
 
 Check out the live demo to see all features in action:  
-**[Live Demo Page](https://your-demo-url-here.com)**
+**[Live Demo Page](https://custom-picker-js.pages.dev/)**
 
 ## ✨ Features
 
